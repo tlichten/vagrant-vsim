@@ -50,7 +50,7 @@ then
   echo "Download manila into $MANILA"
 
   # clone manila
-  su $OS_USER -c "cd && git clone -b $MANILA_BRANCH https://github.com/stackforge/manila.git $MANILA"
+  su $OS_USER -c "cd && git clone -b $MANILA_BRANCH https://github.com/openstack/manila.git $MANILA"
 
   echo "Copy configuration"
 
