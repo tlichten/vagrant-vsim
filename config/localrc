@@ -44,3 +44,4 @@ FLAT_INTERFACE=eth2
 IMAGE_URLS="https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-uec.tar.gz"
 HOST_IP=192.168.33.10
 
+MANILA_REPO_ROOT=openstack
