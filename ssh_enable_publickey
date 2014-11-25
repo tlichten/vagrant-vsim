@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<netapp xmlns="http://www.netapp.com/filer/admin" version="1.21">
+  <security-login-create>
+    <vserver>VSIM</vserver>
+    <user-name>admin</user-name>
+    <application>ssh</application>
+    <authentication-method>publickey</authentication-method>
+    <role-name>admin</role-name>
+  </security-login-create>
+</netapp>
