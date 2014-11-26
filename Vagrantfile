@@ -2,6 +2,7 @@ require 'thread'
 require 'net/http'
 require 'fileutils'
 
+# .3 is the expected host address to be assigned through DHCP, do not change
 NODE_MGMT_IP = "10.0.122.3"
 VBOXNET_HOST_GW_IP = NODE_MGMT_IP.rpartition(".")[0] + ".254"
 
@@ -108,7 +109,7 @@ Vagrant.configure(2) do |config|
       if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
 
         # wait at boot 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "10000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "10000"]
         # send "?"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "2a", "35", "b5", "aa", "1c", "9c"]
 
@@ -118,14 +119,13 @@ Vagrant.configure(2) do |config|
         # send "arg.vm."
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","1e","9e","13","93","22","a2","34","b4","2f","af","32","b2","34","b4"]
 
-
         # send "run_vmtools"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","13","93","16","96","31","b1","2a","0c","8c","aa","2f","af","32","b2","14","94","18","98","18","98","26","a6","1f","9f"]
 
         # send " false<Enter>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","39","b9","21","a1","1e","9e","26","a6","1f","9f","12","92","1c","9c"]
 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "2000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "2000"]
 
         # send "set bootarg"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "1f", "9f", "12", "92", "14", "94", "39", "b9", "30", "b0", "18", "98", "18", "98", "14", "94", "1e", "9e", "13", "93", "22", "a2"]
@@ -139,32 +139,32 @@ Vagrant.configure(2) do |config|
         # send "false<ENTER>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "21", "a1", "1e", "9e", "26", "a6", "1f", "9f", "12", "92", "1c", "9c"]
 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "2000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "2000"]
 
         # send "boot<Enter>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","30","b0","18","98","18","98","14","94","1c","9c"]
 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "10000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "10000"]
 
-        # Ctrl-C
+        # send "Ctrl-C"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "1d", "2e", "9d", "ae"]
 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "45000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "45000"]
 
-        # 4<Enter>
+        # send "4<Enter>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "05", "85", "1c", "9c"]
 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "20000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "20000"]
 
-        # y<Enter>
+        # send "y<Enter>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "15", "95", "1c", "9c"]
 
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "1000"]
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "1000"]
 
-        # y<Enter>
+        # send "y<Enter>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "15", "95", "1c", "9c"]
-        # wait for reboot and disk cleaning
-        p.customize "post-boot", ["guestproperty", "wait", :id, "what", "--timeout", "140000"]
+        # wait for reboot and disk wiping
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "140000"]
       end 
     end
   end
