@@ -1,6 +1,6 @@
 vagrant-vsim
 ============
-Caution: This is project is in pre alpa state. 
+Caution: This project is in pre alpa state. 
 
 System requirements
 ============
