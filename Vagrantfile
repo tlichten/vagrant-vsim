@@ -58,29 +58,30 @@ def ask_to_add_vsim_unless_exists
   Vagrant::Config.run do |config|
     ask_to_add_vsim_unless_exists
 
-  # https://stackoverflow.com/a/20860087
-  if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
-    Thread.new { 
-      puts("Awaiting pre-cluster mode ONTAPI availability... (backgrounding)")
-      $i = 0
-      $max = 5000
-      $up = false
-      while ($i < $max && !$up)  do
-        begin
-          if Net::HTTP.new(NODE_MGMT_IP).get('/na_admin').kind_of? Net::HTTPOK
-            $up = true
-            puts("Pre-cluster mode ONTAPI available.")
-          else
-            puts("Pre-cluster mode ONTAPI failed")
-          end
-        rescue StandardError  
-        end  
-        sleep 1;     
-        print "."
-        $i +=1
-      end
-      system('sh', 'enablecluster.sh', NODE_MGMT_IP)
-    }
+    # https://stackoverflow.com/a/20860087
+    if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
+      Thread.new { 
+        puts("Awaiting pre-cluster mode ONTAPI availability... (backgrounding)")
+        ENV['http_proxy'] = nil
+        $i = 0
+        $max = 5000
+        $up = false
+        while ($i < $max && !$up)  do
+          begin
+            if Net::HTTP.new(NODE_MGMT_IP).get('/na_admin').kind_of? Net::HTTPOK
+              $up = true
+              puts("Pre-cluster mode ONTAPI available.")
+            else
+              puts("Pre-cluster mode ONTAPI failed")
+            end
+          rescue StandardError  
+          end  
+          sleep 1;     
+          print "."
+          $i +=1
+        end
+        system('sh', 'enablecluster.sh', NODE_MGMT_IP)
+      }
   end
 end
 
