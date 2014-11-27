@@ -107,7 +107,7 @@ Vagrant.configure(2) do |config|
     vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
 
     vsim.vm.provider "virtualbox" do |p|
-      p.gui = true
+      # p.gui = true
 
       # https://stackoverflow.com/a/20860087
       if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
