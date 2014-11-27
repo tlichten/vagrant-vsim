@@ -91,9 +91,10 @@ Vagrant.configure(2) do |config|
   config.vm.define "vsim" do |vsim|
     vsim.vm.box = "VSim"
     vsim.ssh.username = "admin"
-    vsim.ssh.password = "netapp123"
-    vsim.ssh.insert_key = false
-
+    if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.5.0')
+      vsim.ssh.password = "netapp123"
+      vsim.ssh.insert_key = false
+    end
     vsim.ssh.host = NODE_MGMT_IP
     vsim.ssh.forward_agent = true
     vsim.ssh.port = "22"
