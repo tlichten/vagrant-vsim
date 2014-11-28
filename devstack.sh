@@ -17,9 +17,10 @@ export OPENSTACK_ADM_PASSWORD=$OPENSTACK_ADM_PASSWORD
 # update system
 sudo yum updateinfo
 sudo yum install -y git mysql-devel
-sudo easy_install pip
+sudo yum install -y epel-release
+sudo yum install -y python-pip
 #sudo pip install mysql-python
-sudo pip install git-review tox
+sudo pip install tox
 
 # openvswitch
 # there is no openvswitch package avaialble. So we have to build it..

@@ -45,3 +45,4 @@ IMAGE_URLS="https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_
 HOST_IP=192.168.33.10
 
 MANILA_REPO_ROOT=openstack
+GIT_BASE=https://git.openstack.org
