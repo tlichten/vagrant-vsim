@@ -47,12 +47,12 @@ def ask_to_add_vsim_unless_exists
             break
           when /\A[nN]o?\Z/ #n or no
             break 
-          end
         end
       end
-      FileUtils.rm_rf "#{name}.box.lock"
     end
+    FileUtils.rm_rf "#{name}.box.lock"
   end
+end
 
 
   Vagrant::Config.run do |config|
@@ -108,7 +108,7 @@ Vagrant.configure(2) do |config|
     vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
 
     vsim.vm.provider "virtualbox" do |p|
-      # p.gui = true
+      p.gui = true
 
       # https://stackoverflow.com/a/20860087
       if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
