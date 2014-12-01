@@ -12,7 +12,6 @@ ENV['OS_HOST_IP'] = DEVSTACK_HOST_IP
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   if Vagrant.has_plugin?("vagrant-proxyconf")
-    ENV["no_proxy"] ||= "localhost,127.0.0.1,#{DEVSTACK_HOST_IP},#{DEVSTACK_MGMT_IP},#{NODE_MGMT_IP},10.0.2.15"
     if ENV["http_proxy"]
       config.proxy.http     = ENV["http_proxy"]
     end
@@ -20,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.proxy.https    = ENV["https_proxy"]
     end
     if ENV["no_proxy"]
-      config.proxy.no_proxy = ENV["no_proxy"]
+      config.proxy.no_proxy = "localhost,127.0.0.1,#{DEVSTACK_HOST_IP},#{DEVSTACK_MGMT_IP},#{NODE_MGMT_IP},10.0.2.15"
     end
   end
 
