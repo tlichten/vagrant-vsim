@@ -66,7 +66,6 @@ Vagrant::Config.run do |config|
 
   # https://stackoverflow.com/a/20860087
   if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
-
     if ENV['CLUSTER_BASE_LICENSE'].nil? || ENV['CLUSTER_BASE_LICENSE'].empty?
       puts "\n\n"
       puts "The cluster base license has not been specified."
@@ -78,7 +77,7 @@ Vagrant::Config.run do |config|
 
     Thread.new {
       puts "Awaiting pre-cluster mode ONTAPI availability... (backgrounding)"
-      ENV["no_proxy"] ||= "localhost,127.0.0.1,#{DEVSTACK_HOST_IP},#{DEVSTACK_MGMT_IP},#{NODE_MGMT_IP},10.0.2.15"
+      ENV["no_proxy"] = "localhost,127.0.0.1,#{NODE_MGMT_IP}"
       $i = 0
       $max = 5000
       $up = false
@@ -86,9 +85,9 @@ Vagrant::Config.run do |config|
         begin
           if Net::HTTP.new(NODE_MGMT_IP).get('/na_admin').kind_of? Net::HTTPOK
             $up = true
-            puts("Pre-cluster mode ONTAPI available.")
+            puts "Pre-cluster mode ONTAPI available."
           else
-            puts("Pre-cluster mode ONTAPI failed")
+            puts "Pre-cluster mode ONTAPI failed"
           end
         rescue StandardError
         end
