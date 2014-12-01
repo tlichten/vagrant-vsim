@@ -2,86 +2,105 @@ require 'thread'
 require 'net/http'
 require 'fileutils'
 
+# Below, fill out the Cluster Base License for Clustered-Ontap Simulator 8.2.1 for
+# VMware Workstation, VMware Player, and VMware Fusion
+ENV['CLUSTER_BASE_LICENSE'] ||= ""
+
+
 # .3 is the expected host address to be assigned through DHCP, do not change
-NODE_MGMT_IP = "10.0.122.3"
-VBOXNET_HOST_GW_IP = NODE_MGMT_IP.rpartition(".")[0] + ".254"
+NODE_MGMT_IP ||= "10.0.122.3"
+VBOXNET_HOST_GW_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".254"
+BOX_NAME ||= "VSim"
+BASE_IMAGE ||= "vsim_netapp-cm.tgz"
+CLUSTER_USERNAME ||= "admin"
+PASSWORD ||= "netapp123"
 
 def add_vsim
-  name = "VSim"
-  base_image = "vsim_netapp-cm.tgz"
-
-  if !File.exists?(File.expand_path("../#{base_image}", __FILE__))
-    puts "\n\n" 
-    puts "VSim base image #{base_image} not found."
-    puts "Download the Clustered-Ontap Simulator 8.2.1 for VMware Workstation, VMware Player, and VMware Fusion from" 
+  if !File.exists?(File.expand_path("../#{BASE_IMAGE}", __FILE__))
+    puts "\n\n"
+    puts "#{BOX_NAME} base image #{BASE_IMAGE} not found."
+    puts "Download the Clustered-Ontap Simulator 8.2.1 for VMware Workstation, VMware Player, and VMware Fusion from"
     puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
-    puts "Save the dowloaded base image file #{base_image} in this directory and run 'vagrant up' again."
+    puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
     return
-  end 
+  end
 
-  puts "Preparing to add #{name} to vagrant. This may take a few minutes." 
-  template = File.join("template", ".")
+  puts "Preparing to add #{BOX_NAME} to vagrant. This may take a few minutes."
+  template_dir = File.join("template", ".")
   tmp_dir = "tmp"
   FileUtils.mkdir tmp_dir
-  FileUtils.cp_r template, tmp_dir
-  puts "Extracting #{name} base image to #{tmp_dir} directory" 
-  `tar zxvf vsim_netapp-cm.tgz --strip-components=1 --directory #{tmp_dir}`
-  puts "Packaging #{name} box for vagrant"
-  `cd #{tmp_dir} && tar cvzf #{name}.box *`
-  puts "Adding #{name} box to vagrant"
-  `cd #{tmp_dir} && vagrant box add #{name} #{name}.box`
+  FileUtils.cp_r template_dir, tmp_dir
+  puts "Extracting #{BOX_NAME} base image to #{tmp_dir} directory"
+  `tar zxvf #{BASE_IMAGE} --strip-components=1 --directory #{tmp_dir}`
+  puts "Packaging #{BOX_NAME} box for vagrant"
+  `cd #{tmp_dir} && tar cvzf #{BOX_NAME}.box *`
+  puts "Adding #{BOX_NAME} box to vagrant"
+  `cd #{tmp_dir} && vagrant box add #{BOX_NAME} #{BOX_NAME}.box`
   FileUtils.rm_rf tmp_dir
-  puts "Done: #{name} box added to vagrant."
+  puts "Done: #{BOX_NAME} box added to vagrant."
 end
 
 def ask_to_add_vsim_unless_exists
-  name = "VSim"
-  if !File.exists?(File.expand_path("../#{name}.box.lock", __FILE__))
-    FileUtils.touch "#{name}.box.lock"
-    if ! `vagrant box list`.include? name
+  if !File.exists?(File.expand_path("../#{BOX_NAME}.box.lock", __FILE__))
+    FileUtils.touch "#{BOX_NAME}.box.lock"
+    if ! `vagrant box list`.include? BOX_NAME
       while true
-        print "The vagrant #{name} box was not found. You can import it which may take a few minutes. Would you like to import the vagrant box? [y/n]: "
+        puts "The vagrant #{BOX_NAME} box was not found."
+        puts "You can import it which may take a few minutes. Would you like to import the vagrant box? [y/n]: "
         case STDIN.getc
           when 'Y', 'y', 'yes'
             add_vsim
             break
           when /\A[nN]o?\Z/ #n or no
-            break 
+            break
         end
       end
     end
-    FileUtils.rm_rf "#{name}.box.lock"
+    FileUtils.rm_rf "#{BOX_NAME}.box.lock"
   end
 end
 
 
-  Vagrant::Config.run do |config|
-    ask_to_add_vsim_unless_exists
+Vagrant::Config.run do |config|
+  ask_to_add_vsim_unless_exists
 
-    # https://stackoverflow.com/a/20860087
-    if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
-      Thread.new { 
-        puts("Awaiting pre-cluster mode ONTAPI availability... (backgrounding)")
-        ENV['http_proxy'] = nil
-        $i = 0
-        $max = 5000
-        $up = false
-        while ($i < $max && !$up)  do
-          begin
-            if Net::HTTP.new(NODE_MGMT_IP).get('/na_admin').kind_of? Net::HTTPOK
-              $up = true
-              puts("Pre-cluster mode ONTAPI available.")
-            else
-              puts("Pre-cluster mode ONTAPI failed")
-            end
-          rescue StandardError  
-          end  
-          sleep 1;     
-          print "."
-          $i +=1
+  # https://stackoverflow.com/a/20860087
+  if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
+
+    if ENV['CLUSTER_BASE_LICENSE'].nil? || ENV['CLUSTER_BASE_LICENSE'].empty?
+      puts "\n\n"
+      puts "The cluster base license has not been specified."
+      puts "Obtain the Clustered-Ontap Simulator 8.2.1 cluster base license from"
+      puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
+      puts "Edit Vagrantfile, at the top set ENV['CLUSTER_BASE_LICENSE'] accordingly."
+      exit
+    end
+
+    Thread.new {
+      puts "Awaiting pre-cluster mode ONTAPI availability... (backgrounding)"
+      ENV["no_proxy"] ||= "localhost,127.0.0.1,#{DEVSTACK_HOST_IP},#{DEVSTACK_MGMT_IP},#{NODE_MGMT_IP},10.0.2.15"
+      $i = 0
+      $max = 5000
+      $up = false
+      while ($i < $max && !$up)  do
+        begin
+          if Net::HTTP.new(NODE_MGMT_IP).get('/na_admin').kind_of? Net::HTTPOK
+            $up = true
+            puts("Pre-cluster mode ONTAPI available.")
+          else
+            puts("Pre-cluster mode ONTAPI failed")
+          end
+        rescue StandardError
         end
-        system('sh', 'enablecluster.sh', NODE_MGMT_IP)
-      }
+        sleep 1;
+        print "."
+        $i +=1
+      end
+      ENV['NODE_MGMT_IP'] = NODE_MGMT_IP
+      ENV['CLUSTER_USERNAME'] = CLUSTER_USERNAME
+      ENV['PASSWORD'] = PASSWORD
+      system('sh', 'enablecluster.sh')
+    }
   end
 end
 
@@ -89,10 +108,10 @@ end
 Vagrant.configure(2) do |config|
 
   config.vm.define "vsim" do |vsim|
-    vsim.vm.box = "VSim"
-    vsim.ssh.username = "admin"
+    vsim.vm.box = BOX_NAME
+    vsim.ssh.username = CLUSTER_USERNAME
     if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.5.0')
-      vsim.ssh.password = "netapp123"
+      vsim.ssh.password = PASSWORD
       vsim.ssh.insert_key = false
     end
     vsim.ssh.host = NODE_MGMT_IP
@@ -102,9 +121,9 @@ Vagrant.configure(2) do |config|
     vsim.vm.synced_folder '.', '/vagrant', disabled: true
 
 
-    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp" 
     vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
-    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp" 
+    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
+    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
     vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
 
     vsim.vm.provider "virtualbox" do |p|
@@ -113,14 +132,14 @@ Vagrant.configure(2) do |config|
       # https://stackoverflow.com/a/20860087
       if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
 
-        # wait at boot 
+        # wait at boot
         p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "10000"]
         # send "?"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "2a", "35", "b5", "aa", "1c", "9c"]
 
         # send "setenv boot"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","1f","9f","12","92","14","94","12","92","31","b1","2f","af","39","b9","30","b0","18","98","18","98","14","94"]
-        
+
         # send "arg.vm."
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","1e","9e","13","93","22","a2","34","b4","2f","af","32","b2","34","b4"]
 
@@ -170,7 +189,7 @@ Vagrant.configure(2) do |config|
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "15", "95", "1c", "9c"]
         # wait for reboot and disk wiping
         p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "140000"]
-      end 
+      end
     end
   end
 end
