@@ -24,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.box = "chef/centos-7.0"
-
+  config.vm.box_url = "https://vagrantcloud.com/chef/boxes/centos-7.0/versions/1.0.0/providers/virtualbox.box"
   config.vm.hostname = "devstack"
 
   config.vm.provider "virtualbox" do |vb|
