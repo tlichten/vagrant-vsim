@@ -2,10 +2,16 @@ require 'thread'
 require 'net/http'
 require 'fileutils'
 
+# =================================== CONFIG ===================================
+
 # Below, fill out the Cluster Base License for Clustered-Ontap Simulator 8.2.1 for
 # VMware Workstation, VMware Player, and VMware Fusion
 ENV['CLUSTER_BASE_LICENSE'] ||= ""
 
+# Below, fill out additional licenses,e.g. NFS, CIFS, as a comma seperated list
+ENV['LICENSES'] ||= ""
+
+# ================================= CONFIG END =================================
 
 # .3 is the expected host address to be assigned through DHCP, do not change
 NODE_MGMT_IP ||= "10.0.122.3"
@@ -62,10 +68,10 @@ end
 
 
 Vagrant::Config.run do |config|
-  ask_to_add_vsim_unless_exists
-
   # https://stackoverflow.com/a/20860087
   if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
+    ask_to_add_vsim_unless_exists
+
     if ENV['CLUSTER_BASE_LICENSE'].nil? || ENV['CLUSTER_BASE_LICENSE'].empty?
       puts "\n\n"
       puts "The cluster base license has not been specified."
