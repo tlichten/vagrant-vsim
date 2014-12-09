@@ -56,6 +56,11 @@ then
   cp $BASHPATH/config/localrc $DEVSTACK/localrc
   chown $OS_USER:$OS_USER $DEVSTACK/localrc
 
+  # copy local.conf settings (source: devstack/samples/local.conf)
+  echo "copy config from $BASHPATH/config/local.conf to $DEVSTACK/local.conf"
+  cp $BASHPATH/config/local.conf $DEVSTACK/local.conf
+  chown $OS_USER:$OS_USER $DEVSTACK/local.conf
+
 fi
 
 MANILA=$PWD/manila
