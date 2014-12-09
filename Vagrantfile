@@ -104,7 +104,7 @@ Vagrant::Config.run do |config|
       ENV['NODE_MGMT_IP'] = NODE_MGMT_IP
       ENV['CLUSTER_USERNAME'] = CLUSTER_USERNAME
       ENV['PASSWORD'] = PASSWORD
-      system('sh', 'enablecluster.sh')
+      system('bash', 'enablecluster.sh')
     }
   end
 end

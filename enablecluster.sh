@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ -n "$1" ]; then
   NODE_MGMT_IP=$1
 fi
