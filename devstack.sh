@@ -22,6 +22,12 @@ sudo yum install -y python-pip
 #sudo pip install mysql-python
 sudo pip install tox
 
+
+# dnsmasq 
+# devstack is requiring dnsmasq version >= 2.67 but only 2.66 is available in repo
+# install newer dnsmasq manually
+yum install -y http://rpmfind.net/linux/fedora/linux/development/rawhide/x86_64/os/Packages/d/dnsmasq-2.72-3.fc22.x86_64.rpm_64.rpm
+
 # openvswitch
 # there is no openvswitch package avaialble. So we have to build it..
 OVS_VERSION=2.3.0
