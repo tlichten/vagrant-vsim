@@ -6,6 +6,7 @@ if [ -n "$1" ]; then
   NODE_MGMT_IP=$1
 fi
 
+# Please use vsim.conf for configuration instead of this file
 CLUSTER_BASE_LICENSE=$CLUSTER_BASE_LICENSE
 NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.155.3}
 CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
