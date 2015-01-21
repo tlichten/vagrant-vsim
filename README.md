@@ -11,6 +11,7 @@ System requirements
  - 20 GB of free disk space
  - SSD 
  - Linux / Mac
+ - Internet connection on first run
 
 Install
 ============
