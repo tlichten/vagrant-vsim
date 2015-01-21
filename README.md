@@ -19,10 +19,9 @@ Install
  - Clone this repo
  - Download the Clustered Data Ontap 8.2.1 Simulator for VMware Workstation, VMware Player, and VMware Fusion from http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/
  - Save the downloaded file 'vsim_netapp-cm.tgz' to this project's root directory, e.g. ~/vagrant-vsim/vsim_netapp-cm.tgz
- - You need to add the Cluster base license first. Important: Use the non-ESX build license. Edit vsim.conf, at the top set the 8.2.1 Cluster base license within CLUSTER_BASE_LICENSE accordingly. The license can be obtained from http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/.
- - **Make sure you have added the base license for the non-ESX build**
- - Optionally, edit vsim.conf and define any additional licenses as a comma separated list within LICENSES accordingly. Important: Use the non-ESX build licenses. The additional licenses can be obtained from http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/
- - **For any additonal licenses, make sure you have added the non-ESX build one for the first node**
+ - You need to add the Cluster base license first. **Important**: Use the **non-ESX build** license. Edit vsim.conf, at the top set the 8.2.1 Cluster base license within CLUSTER_BASE_LICENSE accordingly. The license can be obtained from http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/.
+ - Optionally, edit vsim.conf and define any additional licenses as a comma separated list within LICENSES accordingly. **Important**: Use the **non-ESX build licenses**. The additional licenses can be obtained from http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/
+ - Double check you have added the **non-ESX build** licenses.
  - Run 'vagrant up' from this directory, e.g. ~/vagrant-vsim/
  - You will be asked to import the Simulator as a Vagrant box. Press "y" to proceed and import. The import will take a few minutes
  - Wait until the VSim is ready. Once ready, you can use 'vagrant ssh vsim' to access the VSim console
