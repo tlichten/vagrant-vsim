@@ -1,6 +1,6 @@
 vagrant-vsim
 ============
-**Credits**: This project makes use of the excellent instructions on how to simulate Data ONTAP 8.1.1. with Virtualbox: http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89
+**Credits**: This project makes use of the excellent instructions on how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS: http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89
 
 **Caution**: This project is in pre alpa state. This project uses Virtualbox which is a non supported configuration. There are smaller "hacks" for making this work and it is not pretty. Use at own risk. Please see known issues at the bottom.
 
