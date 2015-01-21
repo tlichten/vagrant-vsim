@@ -2,24 +2,18 @@ require 'thread'
 require 'net/http'
 require 'fileutils'
 
-# =================================== CONFIG ===================================
 
-# Below, fill out the Cluster Base License for Clustered-Ontap Simulator 8.2.1 for
-# VMware Workstation, VMware Player, and VMware Fusion
-ENV['CLUSTER_BASE_LICENSE'] ||= ""
+configfile = 'vsim.conf'
+load configfile if File.exist?(configfile)
 
-# Below, fill out additional licenses,e.g. NFS, CIFS, as a comma seperated list
-ENV['LICENSES'] ||= ""
-
-# ================================= CONFIG END =================================
+ENV['CLUSTER_BASE_LICENSE'] ||= CLUSTER_BASE_LICENSE
 
 # .3 is the expected host address to be assigned through DHCP, do not change
-NODE_MGMT_IP ||= "10.0.122.3"
+NODE_MGMT_IP ||= "10.0.155.3"
 VBOXNET_HOST_GW_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".254"
+SERVICEVM_HOST_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".253"
 BOX_NAME ||= "VSim"
 BASE_IMAGE ||= "vsim_netapp-cm.tgz"
-CLUSTER_USERNAME ||= "admin"
-PASSWORD ||= "netapp123"
 
 def add_vsim
   if !File.exists?(File.expand_path("../#{BASE_IMAGE}", __FILE__))
@@ -52,7 +46,7 @@ def ask_to_add_vsim_unless_exists
     if ! `vagrant box list`.include? BOX_NAME
       while true
         puts "The vagrant #{BOX_NAME} box was not found."
-        puts "You can import it which may take a few minutes. Would you like to import the vagrant box? [y/n]: "
+        puts "You must import it in order to proceed which may take a few minutes. Would you like to import the vagrant box? [y/n]: "
         case STDIN.getc
           when 'Y', 'y', 'yes'
             add_vsim
@@ -77,59 +71,46 @@ Vagrant::Config.run do |config|
       puts "The cluster base license has not been specified."
       puts "Obtain the Clustered-Ontap Simulator 8.2.1 cluster base license from"
       puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
-      puts "Edit Vagrantfile, at the top set ENV['CLUSTER_BASE_LICENSE'] accordingly."
+      puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
       exit
     end
-
-    Thread.new {
-      puts "Awaiting pre-cluster mode ONTAPI availability... (backgrounding)"
-      ENV["no_proxy"] = "localhost,127.0.0.1,#{NODE_MGMT_IP}"
-      $i = 0
-      $max = 5000
-      $up = false
-      while ($i < $max && !$up)  do
-        begin
-          if Net::HTTP.new(NODE_MGMT_IP).get('/na_admin').kind_of? Net::HTTPOK
-            $up = true
-            puts "Pre-cluster mode ONTAPI available."
-          else
-            puts "Pre-cluster mode ONTAPI failed"
-          end
-        rescue StandardError
-        end
-        sleep 1;
-        print "."
-        $i +=1
-      end
-      ENV['NODE_MGMT_IP'] = NODE_MGMT_IP
-      ENV['CLUSTER_USERNAME'] = CLUSTER_USERNAME
-      ENV['PASSWORD'] = PASSWORD
-      system('bash', 'enablecluster.sh')
-    }
   end
 end
 
 
 Vagrant.configure(2) do |config|
 
+  config.vm.define "servicevm" do |servicevm|
+    servicevm.vm.box = "trusty"
+    servicevm.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    servicevm.vm.hostname = "servicevm"
+    servicevm.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "128"]
+      vb.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+    servicevm.vm.network "private_network", ip: SERVICEVM_HOST_IP
+    servicevm.vm.provision :shell, :path => "service.sh"
+    if Vagrant.has_plugin?("vagrant-cachier")
+      servicevm.cache.scope = :box
+    end
+  end
+
   config.vm.define "vsim" do |vsim|
     vsim.vm.box = BOX_NAME
-    vsim.ssh.username = CLUSTER_USERNAME
     if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.5.0')
-      vsim.ssh.password = PASSWORD
-      vsim.ssh.insert_key = false
     end
-    vsim.ssh.host = NODE_MGMT_IP
+    vsim.ssh.host = SERVICEVM_HOST_IP
     vsim.ssh.forward_agent = true
-    vsim.ssh.port = "22"
+    vsim.ssh.port = "22222"
     vsim.vm.boot_timeout = 800
     vsim.vm.synced_folder '.', '/vagrant', disabled: true
 
+    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, auto_config: false
+    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, auto_config: false
+    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, auto_config: false, :mac => "0800DEADAC1D"
+    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, auto_config: false
 
-    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
-    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
-    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
-    vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, type: "dhcp"
+    vsim.vm.provision :shell, :path => "vsim.sh"
 
     vsim.vm.provider "virtualbox" do |p|
       # p.gui = true
@@ -170,30 +151,23 @@ Vagrant.configure(2) do |config|
 
         p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "2000"]
 
+        # send "set bootarg"
+        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "1f", "9f", "12", "92", "14", "94", "39", "b9", "30", "b0", "18", "98", "18", "98", "14", "94", "1e", "9e", "13", "93", "22", "a2"]
+
+        # send ".bootmenu"
+        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "34", "b4", "30", "b0", "18", "98", "18", "98", "14", "94", "32", "b2", "12", "92", "31", "b1", "16", "96"]
+
+
+        # send ".selection"
+        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "34", "b4", "1f", "9f", "12", "92", "26", "a6", "12", "92", "2e", "ae", "14", "94", "17", "97", "18", "98", "31", "b1"]
+
+        # send "=4a<Enter>"
+        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "0d", "8d", "05", "85", "1e", "9e", "1c", "9c"]
+
+        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "2000"]
+
         # send "boot<Enter>"
         p.customize "post-boot", ["controlvm", :id, "keyboardputscancode","30","b0","18","98","18","98","14","94","1c","9c"]
-
-        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "10000"]
-
-        # send "Ctrl-C"
-        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "1d", "2e", "9d", "ae"]
-
-        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "45000"]
-
-        # send "4<Enter>"
-        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "05", "85", "1c", "9c"]
-
-        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "20000"]
-
-        # send "y<Enter>"
-        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "15", "95", "1c", "9c"]
-
-        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "1000"]
-
-        # send "y<Enter>"
-        p.customize "post-boot", ["controlvm", :id, "keyboardputscancode", "15", "95", "1c", "9c"]
-        # wait for reboot and disk wiping
-        p.customize "post-boot", ["guestproperty", "wait", :id, "foobar", "--timeout", "140000"]
       end
     end
   end
