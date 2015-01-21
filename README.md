@@ -2,7 +2,7 @@ vagrant-vsim
 ============
 **Caution**: This project is in pre alpa state. This project uses Virtualbox which is not supported. Use at own risk. Please see known issues at the bottom.
 
-**The goal of this project is to create a largely automated setup of a Clustered Data Ontap simulator using vagrant in order to ease demos, testing and help become more familiar with cDOT and it's integration in projects like OpenStack.** 
+**The goal of this project is to create a largely automated setup of a Clustered Data Ontap simulator using vagrant in order to ease demos, speed up testing and help become more familiar with cDOT and its integration in projects like OpenStack.** 
 
 
 System requirements
