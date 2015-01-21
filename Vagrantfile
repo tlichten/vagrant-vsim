@@ -7,8 +7,6 @@ configfile = 'vsim.conf'
 load configfile if File.exist?(configfile)
 
 ENV['CLUSTER_BASE_LICENSE'] ||= CLUSTER_BASE_LICENSE
-
-# .3 is the expected host address to be assigned through DHCP, do not change
 NODE_MGMT_IP ||= "10.0.155.3"
 VBOXNET_HOST_GW_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".254"
 SERVICEVM_HOST_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".253"
