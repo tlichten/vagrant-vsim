@@ -25,6 +25,7 @@ Install
  - Run 'vagrant up' from this directory, e.g. ~/vagrant-vsim/
  - You will be asked to import the Simulator as a Vagrant box. Press "y" to proceed and import. The import will take a few minutes
  - Wait until the VSim is ready. Once ready, you can use 'vagrant ssh vsim' to access the VSim console
+ - When done, you can destroy the environment using 'vagrant destroy' and recreate with 'vagrant up'
 
 
 Uninstall
@@ -32,7 +33,7 @@ Uninstall
  - Run 'vagrant destroy' from this directory, e.g. ~/vagrant-vsim/. 
  - Run 'vagrant box remove vsim'
  - Run 'vagrant box remove trusty'
- - Optionally, uninstall Virtualbox and vagrant
+ - If desired, uninstall Virtualbox and vagrant
 
 Known issues
 ============
