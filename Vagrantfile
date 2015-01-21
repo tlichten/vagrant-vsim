@@ -89,6 +89,17 @@ Vagrant.configure(2) do |config|
     if Vagrant.has_plugin?("vagrant-cachier")
       servicevm.cache.scope = :box
     end
+    if Vagrant.has_plugin?("vagrant-proxyconf")
+      if ENV["http_proxy"]
+      config.proxy.http = ENV["http_proxy"]
+      end
+      if ENV["https_proxy"]
+      config.proxy.https = ENV["https_proxy"]
+      end
+      if ENV["no_proxy"]
+      config.proxy.no_proxy = "localhost,127.0.0.1,10.0.2.15"
+      end
+    end
   end
 
   config.vm.define "vsim" do |vsim|
