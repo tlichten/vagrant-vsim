@@ -1,5 +1,3 @@
-require 'thread'
-require 'net/http'
 require 'fileutils'
 
 
@@ -46,7 +44,7 @@ def ask_to_add_vsim_unless_exists
     if ! `vagrant box list`.include? BOX_NAME
       while true
         puts "The vagrant #{BOX_NAME} box was not found."
-        puts "You must import it in order to proceed which may take a few minutes. Would you like to import the vagrant box? [y/n]: "
+        puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
         case STDIN.getc
           when 'Y', 'y', 'yes'
             add_vsim
