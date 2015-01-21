@@ -39,7 +39,7 @@ Uninstall
 Known issues
 ============
  - There is no error handling in place, please do not just abort the program when things take a while. At first start, please be patient, preparing the VSim vagrant box can take several minutes.
- - Windows is currently not supported
+ - Windows is currently not working but may be possible in the future
  - Occassionaly, vagrant destroy will error can not delete all VM disks. Manual deletion is required.
  - The setup is limited to a single node cluster
 
