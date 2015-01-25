@@ -33,16 +33,14 @@ API_RATE_LIMIT=False
 
 Q_PLUGIN=ml2
 ENABLE_TENANT_VLANS=True
-ML2_VLAN_RANGES=physnet1:100:4000
-PHYSICAL_NETWORK=physnet1
-OVS_PHYSICAL_BRIDGE=br-eth1
+TENANT_VLAN_RANGE=100:4000
+PHYSICAL_NETWORK=default
+OVS_PHYSICAL_BRIDGE=br-ex
 Q_ML2_PLUGIN_MECHANISM_DRIVERS=openvswitch
 Q_ML2_PLUGIN_TYPE_DRIVERS=flat,vlan,vxlan
 SHARE_BACKING_FILE_SIZE=8G
-FLAT_INTERFACE=eth2
 
 IMAGE_URLS="https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-uec.tar.gz"
-HOST_IP=192.168.33.10
 
 MANILA_REPO_ROOT=openstack
-GIT_BASE=https://git.openstack.org
+GIT_BASE=http://github.com

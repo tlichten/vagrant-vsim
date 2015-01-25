@@ -13,39 +13,20 @@ echo "run script from $BASHPATH"
 export OPENSTACK_BRANCH=$OPENSTACK_BRANCH
 export MANILA_BRANCH=$MANILA_BRANCH
 export OPENSTACK_ADM_PASSWORD=$OPENSTACK_ADM_PASSWORD
-
+export HOST_IP=$OS_HOST_IP
+export NODE_MGMT_IP=$NODE_MGMT_IP
+export DEVSTACK_MGMT_IP=$DEVSTACK_MGMT_IP
 # update system
-sudo yum updateinfo
-sudo yum install -y git mysql-devel
-sudo yum install -y epel-release
-sudo yum install -y python-pip
-#sudo pip install mysql-python
-sudo pip install tox
+export DEBIAN_FRONTEND noninteractive
+sudo apt-get update
+sudo apt-get install -qqy git
+sudo apt-get -y install vim-gtk libxml2-dev libxslt1-dev libpq-dev python-pip libsqlite3-dev && sudo apt-get -y build-dep python-mysqldb && sudo pip install git-review tox
 
-
-# dnsmasq 
-# devstack is requiring dnsmasq version >= 2.67 but only 2.66 is available in repo
-# install newer dnsmasq manually
-yum install -y http://rpmfind.net/linux/fedora/linux/development/rawhide/x86_64/os/Packages/d/dnsmasq-2.72-3.fc22.x86_64.rpm_64.rpm
-
-# openvswitch
-# there is no openvswitch package avaialble. So we have to build it..
-OVS_VERSION=2.3.0
-sudo yum -y install wget openssl-devel kernel-devel rpm-build
-sudo yum -y groupinstall "Development Tools"
-mkdir -p ~/rpmbuild/SOURCES
-cd ~/rpmbuild/SOURCES
-wget http://openvswitch.org/releases/openvswitch-$OVS_VERSION.tar.gz
-cd ~
-tar xfz ~/rpmbuild/SOURCES/openvswitch-$OVS_VERSION.tar.gz
-sed 's/openvswitch-kmod, //g' openvswitch-$OVS_VERSION/rhel/openvswitch.spec > openvswitch-$OVS_VERSION/rhel/openvswitch_no_kmod.spec
-rpmbuild -bb --without check ~/openvswitch-$OVS_VERSION/rhel/openvswitch_no_kmod.spec
-yum localinstall -y ~/rpmbuild/RPMS/x86_64/openvswitch-$OVS_VERSION-1.x86_64.rpm
 
 # determine checkout folder
-
+OS_USER=vagrant
 PWD=$(su $OS_USER -c "cd && pwd")
-DEVSTACK=$PWD/devstack
+DEVSTACK=/home/vagrant/devstack
 
 # check if devstack is already there
 if [ ! -d "$DEVSTACK" ]
@@ -94,3 +75,5 @@ fi
 # start devstack
 echo "Start Devstack"
 su $OS_USER -c "cd $DEVSTACK && ./stack.sh"
+cp /vagrant/poststack.sh $DEVSTACK/../poststack.sh
+su $OS_USER -c "cd $DEVSTACK && cd .. && ./poststack.sh"

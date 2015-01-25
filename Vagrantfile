@@ -4,10 +4,12 @@
 VAGRANTFILE_API_VERSION = "2"
 
 # .3 is the expected host address to be assigned through DHCP, do not change
-NODE_MGMT_IP ||= "10.0.122.3"
+NODE_MGMT_IP ||= "10.0.132.3"
 DEVSTACK_HOST_IP ||= "192.168.33.10"
-DEVSTACK_MGMT_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".253"
+DEVSTACK_MGMT_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".252"
 ENV['OS_HOST_IP'] = DEVSTACK_HOST_IP
+ENV['NODE_MGMT_IP'] = NODE_MGMT_IP
+ENV['DEVSTACK_MGMT_IP']=DEVSTACK_MGMT_IP
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -23,13 +25,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.box = "chef/centos-7.0"
-  config.vm.box_url = "https://vagrantcloud.com/chef/boxes/centos-7.0/versions/1.0.0/providers/virtualbox.box"
+  config.vm.box = "trusty"
+  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
   config.vm.hostname = "devstack"
 
   config.vm.provider "virtualbox" do |vb|
     vb.customize ["modifyvm", :id, "--memory", "4096"]
     vb.customize ["modifyvm", :id, "--cpus", "3"]
+    vb.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
   end
 
   config.vm.network "private_network", ip: DEVSTACK_HOST_IP
@@ -37,7 +40,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :path => "vagrant.sh"
 
-	if Vagrant.has_plugin?("vagrant-cachier")
+  if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box
+    # setup PIP cache
+    config.cache.enable :generic, { "pip" => { :cache_dir => "/var/cache/pip" } }
+    config.vm.provision "file", source: "pip.conf", destination: "/home/vagrant/.pip/pip.conf"
   end
 end
