@@ -273,7 +273,7 @@
           </Adapter>
         </Network>
         <UART>
-          <Port slot="0" enabled="true" IOBase="0x3f8" IRQ="4" server="true" path="/tmp/vsim-socket" hostMode="HostPipe"/>
+          <Port slot="1" enabled="false" IOBase="0x3f8" IRQ="3" hostMode="Disconnected"/>
           <Port slot="1" enabled="false" IOBase="0x2f8" IRQ="3" hostMode="Disconnected"/>
         </UART>
         <LPT>
