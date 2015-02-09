@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<Envelope ovf:version="1.0" xml:lang="en-US" xmlns="http://schemas.dmtf.org/ovf/envelope/1" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vbox="http://www.virtualbox.org/ovf/machine">
+  <References>
+    <File ovf:href="DataONTAP.vmdk" ovf:id="file1"/>
+    <File ovf:href="DataONTAP-var.vmdk" ovf:id="file2"/>
+    <File ovf:href="DataONTAP-nvram.vmdk" ovf:id="file3"/>
+    <File ovf:href="DataONTAP-sim.vmdk" ovf:id="file4"/>
+  </References>
+  <DiskSection>
+    <Info>List of the virtual disks used in the package</Info>
+    <Disk ovf:capacity="2037383168" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="9bd83212-3822-4a29-9408-797d1b69c22d"/>
+    <Disk ovf:capacity="1616904192" ovf:diskId="vmdisk2" ovf:fileRef="file2" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="26ab4ffc-c9d2-4e46-afa5-5bc18dc9f26d"/>
+    <Disk ovf:capacity="5101322240" ovf:diskId="vmdisk3" ovf:fileRef="file3" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="e5c55cd7-b267-47b5-859c-3e2916083ccb"/>
+    <Disk ovf:capacity="268435456000" ovf:diskId="vmdisk4" ovf:fileRef="file4" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="d1e05bae-8e90-4fb7-9d1d-cab344f81b28"/>
+  </DiskSection>
+  <NetworkSection>
+    <Info>Logical networks used in the package</Info>
+    <Network ovf:name="HostOnly">
+      <Description>Logical network used by this appliance.</Description>
+    </Network>
+  </NetworkSection>
+  <VirtualSystem ovf:id="VSim">
+    <Info>A virtual machine</Info>
+    <OperatingSystemSection ovf:id="78">
+      <Info>The kind of installed guest operating system</Info>
+      <Description>FreeBSD_64</Description>
+      <vbox:OSType ovf:required="false">FreeBSD_64</vbox:OSType>
+    </OperatingSystemSection>
+    <VirtualHardwareSection>
+      <Info>Virtual hardware requirements for a virtual machine</Info>
+      <System>
+        <vssd:ElementName>Virtual Hardware Family</vssd:ElementName>
+        <vssd:InstanceID>0</vssd:InstanceID>
+        <vssd:VirtualSystemIdentifier>VSim</vssd:VirtualSystemIdentifier>
+        <vssd:VirtualSystemType>virtualbox-2.2</vssd:VirtualSystemType>
+      </System>
+      <Item>
+        <rasd:Caption>2 virtual CPU</rasd:Caption>
+        <rasd:Description>Number of virtual CPUs</rasd:Description>
+        <rasd:ElementName>2 virtual CPU</rasd:ElementName>
+        <rasd:InstanceID>1</rasd:InstanceID>
+        <rasd:ResourceType>3</rasd:ResourceType>
+        <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
+        <rasd:Caption>1600 MB of memory</rasd:Caption>
+        <rasd:Description>Memory Size</rasd:Description>
+        <rasd:ElementName>1600 MB of memory</rasd:ElementName>
+        <rasd:InstanceID>2</rasd:InstanceID>
+        <rasd:ResourceType>4</rasd:ResourceType>
+        <rasd:VirtualQuantity>1600</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Address>0</rasd:Address>
+        <rasd:Caption>ideController0</rasd:Caption>
+        <rasd:Description>IDE Controller</rasd:Description>
+        <rasd:ElementName>ideController0</rasd:ElementName>
+        <rasd:InstanceID>3</rasd:InstanceID>
+        <rasd:ResourceSubType>PIIX4</rasd:ResourceSubType>
+        <rasd:ResourceType>5</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:Address>1</rasd:Address>
+        <rasd:Caption>ideController1</rasd:Caption>
+        <rasd:Description>IDE Controller</rasd:Description>
+        <rasd:ElementName>ideController1</rasd:ElementName>
+        <rasd:InstanceID>4</rasd:InstanceID>
+        <rasd:ResourceSubType>PIIX4</rasd:ResourceSubType>
+        <rasd:ResourceType>5</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AddressOnParent>0</rasd:AddressOnParent>
+        <rasd:AutomaticAllocation>false</rasd:AutomaticAllocation>
+        <rasd:Caption>floppy0</rasd:Caption>
+        <rasd:Description>Floppy Drive</rasd:Description>
+        <rasd:ElementName>floppy0</rasd:ElementName>
+        <rasd:InstanceID>5</rasd:InstanceID>
+        <rasd:ResourceType>14</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AddressOnParent>0</rasd:AddressOnParent>
+        <rasd:Caption>disk1</rasd:Caption>
+        <rasd:Description>Disk Image</rasd:Description>
+        <rasd:ElementName>disk1</rasd:ElementName>
+        <rasd:HostResource>/disk/vmdisk1</rasd:HostResource>
+        <rasd:InstanceID>6</rasd:InstanceID>
+        <rasd:Parent>3</rasd:Parent>
+        <rasd:ResourceType>17</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AddressOnParent>1</rasd:AddressOnParent>
+        <rasd:Caption>disk2</rasd:Caption>
+        <rasd:Description>Disk Image</rasd:Description>
+        <rasd:ElementName>disk2</rasd:ElementName>
+        <rasd:HostResource>/disk/vmdisk2</rasd:HostResource>
+        <rasd:InstanceID>7</rasd:InstanceID>
+        <rasd:Parent>3</rasd:Parent>
+        <rasd:ResourceType>17</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AddressOnParent>0</rasd:AddressOnParent>
+        <rasd:Caption>disk3</rasd:Caption>
+        <rasd:Description>Disk Image</rasd:Description>
+        <rasd:ElementName>disk3</rasd:ElementName>
+        <rasd:HostResource>/disk/vmdisk3</rasd:HostResource>
+        <rasd:InstanceID>8</rasd:InstanceID>
+        <rasd:Parent>4</rasd:Parent>
+        <rasd:ResourceType>17</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AddressOnParent>1</rasd:AddressOnParent>
+        <rasd:Caption>disk4</rasd:Caption>
+        <rasd:Description>Disk Image</rasd:Description>
+        <rasd:ElementName>disk4</rasd:ElementName>
+        <rasd:HostResource>/disk/vmdisk4</rasd:HostResource>
+        <rasd:InstanceID>9</rasd:InstanceID>
+        <rasd:Parent>4</rasd:Parent>
+        <rasd:ResourceType>17</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+        <rasd:Caption>Ethernet adapter on 'HostOnly'</rasd:Caption>
+        <rasd:Connection>HostOnly</rasd:Connection>
+        <rasd:ElementName>Ethernet adapter on 'HostOnly'</rasd:ElementName>
+        <rasd:InstanceID>10</rasd:InstanceID>
+        <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+        <rasd:ResourceType>10</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+        <rasd:Caption>Ethernet adapter on 'HostOnly'</rasd:Caption>
+        <rasd:Connection>HostOnly</rasd:Connection>
+        <rasd:ElementName>Ethernet adapter on 'HostOnly'</rasd:ElementName>
+        <rasd:InstanceID>11</rasd:InstanceID>
+        <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+        <rasd:ResourceType>10</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+        <rasd:Caption>Ethernet adapter on 'HostOnly'</rasd:Caption>
+        <rasd:Connection>HostOnly</rasd:Connection>
+        <rasd:ElementName>Ethernet adapter on 'HostOnly'</rasd:ElementName>
+        <rasd:InstanceID>12</rasd:InstanceID>
+        <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+        <rasd:ResourceType>10</rasd:ResourceType>
+      </Item>
+      <Item>
+        <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+        <rasd:Caption>Ethernet adapter on 'HostOnly'</rasd:Caption>
+        <rasd:Connection>HostOnly</rasd:Connection>
+        <rasd:ElementName>Ethernet adapter on 'HostOnly'</rasd:ElementName>
+        <rasd:InstanceID>13</rasd:InstanceID>
+        <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+        <rasd:ResourceType>10</rasd:ResourceType>
+      </Item>
+    </VirtualHardwareSection>
+    <vbox:Machine ovf:required="false" version="1.12-linux" uuid="{2214f616-566a-4ee9-843f-0414721d70b1}" name="VSim" OSType="FreeBSD_64" snapshotFolder="Snapshots" lastStateChange="2014-08-14T13:54:31Z">
+      <ovf:Info>Complete VirtualBox machine configuration in VirtualBox format</ovf:Info>
+      <ExtraData>
+        <ExtraDataItem name="GUI/LastCloseAction" value="PowerOff"/>
+        <ExtraDataItem name="GUI/LastGuestSizeHint" value="720,400"/>
+        <ExtraDataItem name="GUI/LastNormalWindowPosition" value="984,106,720,447"/>
+      </ExtraData>
+      <Hardware version="2">
+        <CPU count="2" hotplug="false">
+          <HardwareVirtEx enabled="true"/>
+          <HardwareVirtExNestedPaging enabled="true"/>
+          <HardwareVirtExVPID enabled="true"/>
+          <HardwareVirtExUX enabled="true"/>
+          <PAE enabled="false"/>
+          <HardwareVirtExLargePages enabled="false"/>
+          <HardwareVirtForce enabled="false"/>
+        </CPU>
+        <Memory RAMSize="1600" PageFusion="false"/>
+        <HID Pointing="PS2Mouse" Keyboard="PS2Keyboard"/>
+        <HPET enabled="false"/>
+        <Chipset type="PIIX3"/>
+        <Boot>
+          <Order position="1" device="Floppy"/>
+          <Order position="2" device="DVD"/>
+          <Order position="3" device="HardDisk"/>
+          <Order position="4" device="None"/>
+        </Boot>
+        <Display VRAMSize="9" monitorCount="1" accelerate3D="false" accelerate2DVideo="false"/>
+        <VideoCapture/>
+        <RemoteDisplay enabled="false" authType="Null" authTimeout="5000"/>
+        <BIOS>
+          <ACPI enabled="true"/>
+          <IOAPIC enabled="true"/>
+          <Logo fadeIn="true" fadeOut="true" displayTime="0"/>
+          <BootMenu mode="MessageAndMenu"/>
+          <TimeOffset value="0"/>
+          <PXEDebug enabled="false"/>
+        </BIOS>
+        <USBController enabled="false" enabledEhci="false"/>
+        <Network>
+          <Adapter slot="0" enabled="true" MACAddress="08002768F2E1" cable="true" speed="0" type="82545EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+              <InternalNetwork name="intnet"/>
+              <NATNetwork name="NatNetwork"/>
+            </DisabledModes>
+            <HostOnlyInterface name="vboxnet0"/>
+          </Adapter>
+          <Adapter slot="1" enabled="true" MACAddress="0800277CF066" cable="true" speed="0" type="82545EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+              <InternalNetwork name="intnet"/>
+              <NATNetwork name="NatNetwork"/>
+            </DisabledModes>
+            <HostOnlyInterface name="vboxnet0"/>
+          </Adapter>
+          <Adapter slot="2" enabled="true" MACAddress="0800270ADC46" cable="true" speed="0" type="82545EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+              <InternalNetwork name="intnet"/>
+              <NATNetwork name="NatNetwork"/>
+            </DisabledModes>
+            <HostOnlyInterface name="vboxnet0"/>
+          </Adapter>
+          <Adapter slot="3" enabled="true" MACAddress="080027742187" cable="true" speed="0" type="82545EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+              <InternalNetwork name="intnet"/>
+              <NATNetwork name="NatNetwork"/>
+            </DisabledModes>
+            <HostOnlyInterface name="vboxnet0"/>
+          </Adapter>
+          <Adapter slot="4" enabled="false" MACAddress="08002766CAE4" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="5" enabled="false" MACAddress="080027901AE9" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="6" enabled="false" MACAddress="080027EF4AE8" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+          <Adapter slot="7" enabled="false" MACAddress="0800275B5C61" cable="true" speed="0" type="82540EM">
+            <DisabledModes>
+              <NAT>
+                <DNS pass-domain="true" use-proxy="false" use-host-resolver="false"/>
+                <Alias logging="false" proxy-only="false" use-same-ports="false"/>
+              </NAT>
+            </DisabledModes>
+          </Adapter>
+        </Network>
+        <UART>
+          <Port slot="0" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
+          <Port slot="1" enabled="false" IOBase="0x2f8" IRQ="3" hostMode="Disconnected"/>
+        </UART>
+        <LPT>
+          <Port slot="0" enabled="false" IOBase="0x378" IRQ="7"/>
+          <Port slot="1" enabled="false" IOBase="0x378" IRQ="7"/>
+        </LPT>
+        <AudioAdapter controller="AC97" driver="Pulse" enabled="false"/>
+        <RTC localOrUTC="local"/>
+        <SharedFolders/>
+        <Clipboard mode="Disabled"/>
+        <DragAndDrop mode="Disabled"/>
+        <IO>
+          <IoCache enabled="true" size="5"/>
+          <BandwidthGroups/>
+        </IO>
+        <HostPci>
+          <Devices/>
+        </HostPci>
+        <EmulatedUSB>
+          <CardReader enabled="false"/>
+        </EmulatedUSB>
+        <Guest memoryBalloonSize="0"/>
+        <GuestProperties>
+          <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1408022993193320000" flags=""/>
+        </GuestProperties>
+      </Hardware>
+      <StorageControllers>
+				<StorageController name="IDE" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true">
+          <AttachedDevice type="HardDisk" port="0" device="0">
+            <Image uuid="{9bd83212-3822-4a29-9408-797d1b69c22d}"/>
+          </AttachedDevice>
+          <AttachedDevice type="HardDisk" port="0" device="1">
+            <Image uuid="{26ab4ffc-c9d2-4e46-afa5-5bc18dc9f26d}"/>
+          </AttachedDevice>
+          <AttachedDevice type="HardDisk" port="1" device="0">
+            <Image uuid="{e5c55cd7-b267-47b5-859c-3e2916083ccb}"/>
+          </AttachedDevice>
+          <AttachedDevice type="HardDisk" port="1" device="1">
+            <Image uuid="{d1e05bae-8e90-4fb7-9d1d-cab344f81b28}"/>
+          </AttachedDevice>
+        </StorageController>
+        <StorageController name="Floppy" type="I82078" PortCount="1" useHostIOCache="true" Bootable="true">
+          <AttachedDevice type="Floppy" port="0" device="0"/>
+        </StorageController>
+      </StorageControllers>
+    </vbox:Machine>
+  </VirtualSystem>
+</Envelope>

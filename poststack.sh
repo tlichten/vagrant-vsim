@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DEVSTACK_MGMT_IP=10.0.132.252
+DEVSTACK_MGMT_IP=10.0.207.252
 . devstack/functions
 sudo ip addr del $DEVSTACK_MGMT_IP/24 dev eth2
 sudo ovs-vsctl add-port br-ex eth2
