@@ -31,7 +31,7 @@ nova floating-ip-create public
 
 FLOATING_IP=$(nova floating-ip-list | grep public | get_field 1)
 nova add-floating-ip demo-vm0 $FLOATING_IP
-BOOT_TIMEOUT=180
+BOOT_TIMEOUT=360
 if ! timeout $BOOT_TIMEOUT sh -c "while ! ping -c1 -w1 $FLOATING_IP; do sleep 1; done"; then
         echo "Couldn't ping server"
         exit 1

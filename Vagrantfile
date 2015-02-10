@@ -125,7 +125,7 @@ def add_vsim
     puts "Download the Clustered-Ontap Simulator 8.2.2P1 for VMware Workstation, VMware Player, and VMware Fusion from"
     puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
     puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
-    return
+    exit
   end
 
   puts "Preparing to add #{BOX_NAME} to vagrant. This may take a few minutes."
@@ -143,8 +143,11 @@ def add_vsim
   files = Dir.glob(File.join(".", "*"))
   result = Vagrant::Util::Subprocess.execute("bsdtar", "-c", "-v", "-z","-f", "#{BOX_NAME}.box", *files)
   end 
+  box_file = File.join(vsim_dir, "#{BOX_NAME}.box")
+  FileUtils.mv(box_file, tmp_dir)
+  FileUtils.rm_rf vsim_dir
   puts "Adding #{BOX_NAME} box to vagrant"
-  `cd #{vsim_dir} && vagrant box add #{BOX_NAME} #{BOX_NAME}.box`
+  `cd #{tmp_dir} && vagrant box add #{BOX_NAME} #{BOX_NAME}.box`
   FileUtils.rm_rf tmp_dir
   puts "Done: #{BOX_NAME} box added to vagrant."
 end
@@ -161,7 +164,7 @@ def ask_to_add_vsim_unless_exists
             add_vsim
             break
           when /\A[nN]o?\Z/ #n or no
-            break
+            exit
         end
       end
     end
