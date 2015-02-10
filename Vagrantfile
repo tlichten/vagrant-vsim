@@ -195,8 +195,7 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "servicevm" do |servicevm|
-    servicevm.vm.box = "trusty"
-    servicevm.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    servicevm.vm.box = "ubuntu/trusty64"
     servicevm.vm.hostname = "servicevm"
   servicevm.ssh.insert_key = false
     servicevm.vm.provider "virtualbox" do |vb|
@@ -255,8 +254,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "devstackvm" do |devstackvm|
-    devstackvm.vm.box = "trusty"
-    devstackvm.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    devstackvm.vm.box = "ubuntu/trusty64"
     devstackvm.vm.hostname = "devstack"
 
     devstackvm.vm.provider "virtualbox" do |vb|
