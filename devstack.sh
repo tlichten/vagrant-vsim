@@ -18,7 +18,7 @@ export NODE_MGMT_IP=$NODE_MGMT_IP
 export DEVSTACK_MGMT_IP=$DEVSTACK_MGMT_IP
 # update system
 export DEBIAN_FRONTEND noninteractive
-sudo apt-get update
+sudo apt-get -y update
 sudo apt-get install -qqy git
 sudo apt-get -y install vim-gtk libxml2-dev libxslt1-dev libpq-dev python-pip libsqlite3-dev && sudo apt-get -y build-dep python-mysqldb && sudo pip install git-review tox
 

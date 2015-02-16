@@ -118,54 +118,94 @@ module VagrantPlugins
 end
 
 
-def add_vsim
-  if !File.exists?(File.expand_path("../#{BASE_IMAGE}", __FILE__))
-    puts "\n\n"
-    puts "#{BOX_NAME} base image #{BASE_IMAGE} not found."
-    puts "Download the Clustered-Ontap Simulator 8.2.2P1 for VMware Workstation, VMware Player, and VMware Fusion from"
-    puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
-    puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
-    return
-  end
+module VagrantPlugins
+  module VSimPlugin
+    class ValidateBox
+      def initialize(app, env)
+        @app = app
+      end
 
-  puts "Preparing to add #{BOX_NAME} to vagrant. This may take a few minutes."
-  template_dir = File.join("template", ".")
-  tmp_dir = "tmp"
-  FileUtils.mkdir tmp_dir 
-  result = Vagrant::Util::Subprocess.execute(
-"bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", BASE_IMAGE.to_s)
-  vsim_dir = File.join(tmp_dir, "vsim_netapp-cm")
-  FileUtils.cp_r template_dir, vsim_dir
-  puts "Packaging #{BOX_NAME} box for vagrant"
-  
-  box_target = File.join(tmp_dir, "#{BOX_NAME}.box")
-  Vagrant::Util::SafeChdir.safe_chdir(vsim_dir) do
-  files = Dir.glob(File.join(".", "*"))
-  result = Vagrant::Util::Subprocess.execute("bsdtar", "-c", "-v", "-z","-f", "#{BOX_NAME}.box", *files)
-  end 
-  puts "Adding #{BOX_NAME} box to vagrant"
-  `cd #{vsim_dir} && vagrant box add #{BOX_NAME} #{BOX_NAME}.box`
-  FileUtils.rm_rf tmp_dir
-  puts "Done: #{BOX_NAME} box added to vagrant."
-end
+      def call(env)
+        # https://stackoverflow.com/a/20860087
+        if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
+          if ENV['CLUSTER_BASE_LICENSE'].nil? || ENV['CLUSTER_BASE_LICENSE'].empty?
+            puts "\n\n"
+            puts "The cluster base license has not been specified."
+            puts "Obtain the Clustered-Ontap Simulator 8.2.2 cluster base license from"
+            puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
+            puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
+            exit
+          end
+          ask_to_add_vsim_unless_exists
+        end
+        @app.call(env)
+      end
 
-def ask_to_add_vsim_unless_exists
-  if !File.exists?(File.expand_path("../#{BOX_NAME}.box.lock", __FILE__))
-    FileUtils.touch "#{BOX_NAME}.box.lock"
-    if ! `vagrant box list`.include? BOX_NAME
-      while true
-        puts "The vagrant #{BOX_NAME} box was not found."
-        puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
-        case STDIN.getc
-          when 'Y', 'y', 'yes'
-            add_vsim
-            break
-          when /\A[nN]o?\Z/ #n or no
-            break
+      def add_vsim
+        if !File.exists?(File.expand_path("../#{BASE_IMAGE}", __FILE__))
+          puts "\n\n"
+          puts "#{BOX_NAME} base image #{BASE_IMAGE} not found."
+          puts "Download the Clustered-Ontap Simulator 8.2.2P1 for VMware Workstation, VMware Player, and VMware Fusion from"
+          puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
+          puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
+          FileUtils.rm_rf "#{BOX_NAME}.box.lock"
+          exit
+        end
+
+        puts "Preparing to add #{BOX_NAME} to vagrant. This may take a few minutes."
+        template_dir = File.join("template", ".")
+        tmp_dir = "tmp"
+        FileUtils.mkdir tmp_dir 
+        result = Vagrant::Util::Subprocess.execute("bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", BASE_IMAGE.to_s)
+        vsim_dir = File.join(tmp_dir, "vsim_netapp-cm")
+        FileUtils.cp_r template_dir, vsim_dir
+        puts "Packaging #{BOX_NAME} box for vagrant"
+        
+        box_target = File.join(tmp_dir, "#{BOX_NAME}.box")
+        Vagrant::Util::SafeChdir.safe_chdir(vsim_dir) do
+        files = Dir.glob(File.join(".", "*"))
+        result = Vagrant::Util::Subprocess.execute("bsdtar", "-c", "-v", "-z","-f", "#{BOX_NAME}.box", *files)
+        end 
+        box_file = File.join(vsim_dir, "#{BOX_NAME}.box")
+        FileUtils.mv(box_file, tmp_dir)
+        FileUtils.rm_rf vsim_dir
+        puts "Adding #{BOX_NAME} box to vagrant"
+        `cd #{tmp_dir} && vagrant box add #{BOX_NAME} #{BOX_NAME}.box`
+        FileUtils.rm_rf tmp_dir
+        puts "Done: #{BOX_NAME} box added to vagrant."
+      end
+
+      def ask_to_add_vsim_unless_exists
+        if !File.exists?(File.expand_path("../#{BOX_NAME}.box.lock", __FILE__))
+          FileUtils.touch "#{BOX_NAME}.box.lock"
+          if ! `vagrant box list`.include? BOX_NAME
+            while true
+              puts "The vagrant #{BOX_NAME} box was not found."
+              puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
+              case STDIN.getc
+                when 'Y', 'y', 'yes'
+                  add_vsim
+                  break
+                when /\A[nN]o?\Z/ #n or no
+                  FileUtils.rm_rf "#{BOX_NAME}.box.lock"
+                  exit
+              end
+            end
+          end
+          FileUtils.rm_rf "#{BOX_NAME}.box.lock"
         end
       end
     end
-    FileUtils.rm_rf "#{BOX_NAME}.box.lock"
+
+    class Plugin < Vagrant.plugin("2")
+      name "ValidateBox"
+
+      action_hook :send_flags, :machine_action_up do |hook|
+        hook.before(Vagrant::Action::Builtin::HandleBox, ::Vagrant::Action::Builder.new.tap do |b|
+          b.use VagrantPlugins::VSimPlugin::ValidateBox
+        end)
+      end
+    end
   end
 end
 
@@ -175,25 +215,11 @@ Vagrant::Config.run do |config|
       puts "Vagrant version #{Gem::Version.new(Vagrant::VERSION)} detected. But Vagrant version #{VAGRANT_MINVERSION} or greater is required. Please update Vagrant."
       exit
   end
-
-  # https://stackoverflow.com/a/20860087
-  if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
-    ask_to_add_vsim_unless_exists
-    if ENV['CLUSTER_BASE_LICENSE'].nil? || ENV['CLUSTER_BASE_LICENSE'].empty?
-      puts "\n\n"
-      puts "The cluster base license has not been specified."
-      puts "Obtain the Clustered-Ontap Simulator 8.2.2 cluster base license from"
-      puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
-      puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
-      exit
-    end
-  end
 end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "servicevm" do |servicevm|
-    servicevm.vm.box = "trusty"
-    servicevm.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    servicevm.vm.box = "ubuntu/trusty64"
     servicevm.vm.hostname = "servicevm"
   servicevm.ssh.insert_key = false
     servicevm.vm.provider "virtualbox" do |vb|
@@ -252,8 +278,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "devstackvm" do |devstackvm|
-    devstackvm.vm.box = "trusty"
-    devstackvm.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    devstackvm.vm.box = "ubuntu/trusty64"
     devstackvm.vm.hostname = "devstack"
 
     devstackvm.vm.provider "virtualbox" do |vb|
