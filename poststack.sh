@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DEVSTACK_MGMT_IP=10.0.207.252
+
 . devstack/functions
 sudo ip addr del $DEVSTACK_MGMT_IP/24 dev eth2
 sudo ovs-vsctl add-port br-ex eth2
@@ -37,3 +37,15 @@ if ! timeout $BOOT_TIMEOUT sh -c "while ! ping -c1 -w1 $FLOATING_IP; do sleep 1;
         exit 1
 fi
 
+# If you installed Horizon on this server you should be able
+# to access the site using your browser.
+if is_service_enabled horizon; then
+echo "Horizon is now available at http://$SERVICE_HOST/"
+fi
+# If Keystone is present you can point ``nova`` cli to this server
+if is_service_enabled key; then
+echo "Keystone is serving at $KEYSTONE_SERVICE_URI/v2.0/"
+echo "Examples on using novaclient command line is in exercise.sh"
+echo "The default users are: admin and demo"
+echo "The password: $ADMIN_PASSWORD"
+fi
