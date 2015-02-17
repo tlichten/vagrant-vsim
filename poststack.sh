@@ -49,4 +49,6 @@ if is_service_enabled key; then
 echo "Examples on using novaclient command line is in exercise.sh"
 echo "The default users are: admin and demo"
 echo "The password: $ADMIN_PASSWORD"
+echo "Devstack VM console available running: vagrant ssh devstackvm"
+echo "VSim available running: vagrant ssh vsim"
 fi
