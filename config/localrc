@@ -20,7 +20,7 @@ ENABLED_SERVICES+=,cinder,c-sch,c-api,c-vol,c-bak
 #manila
 ENABLED_SERVICES+=,manila,m-api,m-sch,m-shr
 #others
-ENABLED_SERVICES+=,horizon,rabbit,mysql,tempest
+ENABLED_SERVICES+=,horizon,rabbit,mysql
 #neutron needs for manila
 disable_service n-net
 enable_service q-svc,q-agt,q-dhcp,q-l3,q-meta,neutron
@@ -44,3 +44,7 @@ IMAGE_URLS="https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_
 
 MANILA_REPO_ROOT=openstack
 GIT_BASE=http://github.com
+GIT_DEPTH=1
+HOST_IP=192.168.33.10
+OS_HOST_IP=$HOST_IP
+
