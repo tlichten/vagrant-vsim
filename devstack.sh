@@ -13,11 +13,12 @@ echo "run script from $BASHPATH"
 export OPENSTACK_BRANCH=$OPENSTACK_BRANCH
 export MANILA_BRANCH=$MANILA_BRANCH
 export OPENSTACK_ADM_PASSWORD=$OPENSTACK_ADM_PASSWORD
-export HOST_IP=$OS_HOST_IP
+export OS_HOST_IP=$OS_HOST_IP
 export NODE_MGMT_IP=$NODE_MGMT_IP
 export DEVSTACK_MGMT_IP=$DEVSTACK_MGMT_IP
 # update system
 export DEBIAN_FRONTEND noninteractive
+
 sudo apt-get -y update
 sudo apt-get install -qqy git
 sudo apt-get -y install vim-gtk libxml2-dev libxslt1-dev libpq-dev python-pip libsqlite3-dev && sudo apt-get -y build-dep python-mysqldb && sudo pip install git-review tox
@@ -68,6 +69,8 @@ then
   # copy manila extras script
   echo "copy extras script from $MANILA/contrib/devstack/extras.d/70-manila.sh to $DEVSTACK/extras.d"
   cp $MANILA/contrib/devstack/extras.d/70-manila.sh $DEVSTACK/extras.d
+
+
 
 fi
 

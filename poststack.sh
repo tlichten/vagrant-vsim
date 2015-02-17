@@ -19,10 +19,12 @@ neutron security-group-rule-create --protocol icmp default
 neutron security-group-rule-create --protocol tcp --port-range-min 22 --port-range-max 22 default
 NEUTRON_SUBNET_ID=$(neutron subnet-list | grep p-m-0 | get_field 1)
 manila share-network-create --neutron-net-id $NEUTRON_NET_ID --neutron-subnet-id $NEUTRON_SUBNET_ID --name p-s
+sleep 30
 manila create --share-network p-s --name share NFS 1
+sleep 30
 NEUTRON_NET_ID=$(neutron net-list | grep p-m | get_field 1)
 
-nova boot --poll --flavor m1.nano --image ubuntu_1204_nfs_cifs --nic net-id=$NEUTRON_NET_ID demo-vm0
+nova boot --poll --flavor manila-service-flavor --image ubuntu_1204_nfs_cifs --nic net-id=$NEUTRON_NET_ID demo-vm0
 MANILA_NET_ID=$(manila list | grep share | get_field 1)
 INSTANCE_IP=$(nova list | grep demo-vm0 | get_field 6 | grep -oE '[0-9.]+')
 manila access-allow $MANILA_NET_ID ip $INSTANCE_IP
@@ -40,11 +42,10 @@ fi
 # If you installed Horizon on this server you should be able
 # to access the site using your browser.
 if is_service_enabled horizon; then
-echo "Horizon is now available at http://$SERVICE_HOST/"
+echo "Horizon is now available at http://$OS_HOST_IP/"
 fi
 # If Keystone is present you can point ``nova`` cli to this server
 if is_service_enabled key; then
-echo "Keystone is serving at $KEYSTONE_SERVICE_URI/v2.0/"
 echo "Examples on using novaclient command line is in exercise.sh"
 echo "The default users are: admin and demo"
 echo "The password: $ADMIN_PASSWORD"
