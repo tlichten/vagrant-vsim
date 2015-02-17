@@ -119,7 +119,7 @@ echo "Enabling SSH public key auth"
 sleep 5
 echo "Assigning disks"
 /usr/bin/curl -X POST -d "$DISK_ASSIGN"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 5
+sleep 10
 
 if [ -n "$LICENSES" ]; then
   echo "Adding additional licenses $LICENSES"
