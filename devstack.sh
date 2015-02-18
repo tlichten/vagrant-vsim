@@ -74,6 +74,20 @@ then
 
 fi
 
+# Copy NetApp configs
+
+# Copy nfs shares
+echo "Copy nfs shares from $BASHPATH/config/nfs.shares to /etc/cinder/nfs.shares"
+sudo mkdir -p /etc/cinder
+sudo chown $OS_USER:$OS_USER /etc/cinder
+sudo cp $BASHPATH/config/nfs.shares /etc/cinder/nfs.shares
+sudo chown $OS_USER:$OS_USER /etc/cinder/nfs.shares
+
+# Mount Glance
+echo "Mounting Glance export"
+sudo mkdir -p /mnt/glance
+sudo mount -t nfs -o sec=sys 10.0.207.40:/vol5_glance /mnt/glance
+sudo chown -R $OS_USER:$OS_USER /mnt/glance
 
 # start devstack
 echo "Start Devstack"

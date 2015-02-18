@@ -119,7 +119,7 @@ echo "Enabling SSH public key auth"
 sleep 5
 echo "Assigning disks"
 /usr/bin/curl -X POST -d "$DISK_ASSIGN"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 10
+sleep 20
 
 if [ -n "$LICENSES" ]; then
   echo "Adding additional licenses $LICENSES"
@@ -132,6 +132,13 @@ echo "Creating additional aggregate"
 sleep 15
 echo "Adding public key for $CLUSTER_USERNAME"
 sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t 'security login publickey create -username vagrant -index 0 -publickey "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ=="' 2>/dev/null
+
+echo "Running additional commands"
+while read -u 3 p; do
+  echo $p
+  sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t "$p" 2>/dev/null
+  sleep 10
+done 3</vagrant/vsim.cmds
 
 echo "SSH is available at $NODE_MGMT_IP. username $CLUSTER_USERNAME, password $PASSWORD"
 echo "VSim ready. Run 'vagrant ssh vsim' for console access."
