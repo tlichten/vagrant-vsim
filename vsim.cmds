@@ -10,7 +10,7 @@ network interface create -vserver demo-nfs-svm -lif demo-nfs-data -role data -ho
 vserver export-policy rule create -vserver demo-nfs-svm -policyname default -clientmatch 0.0.0.0/0 -rorule any -rwrule any -superuser any -anon 0
 volume create -vserver demo-nfs-svm -volume vol2_dedup -aggregate aggr1 -size 10g -junction-path /vol2_dedup -space-guarantee none -unix-permissions ---rwxrwxrwx
 volume create -vserver demo-nfs-svm -volume vol3_compressed -aggregate aggr1 -size 10g -junction-path /vol3_compressed -space-guarantee none -unix-permissions ---rwxrwxrwx
-volume create -vserver demo-nfs-svm -volume vol4_mirrored -aggregate aggr1 -size 10g -junction-path /vol4_mirrored -space-guarantee none 
+volume create -vserver demo-nfs-svm -volume vol4_mirrored -aggregate aggr1 -size 10g -junction-path /vol4_mirrored -space-guarantee none -unix-permissions ---rwxrwxrwx
 volume create -vserver demo-nfs-svm -volume vol4_mirror_dest -aggregate aggr1 -size 10g -type DP -space-guarantee none 
 snapmirror create -source-path demo-nfs-svm:vol4_mirrored -destination-path demo-nfs-svm:vol4_mirror_dest -type DP -vserver demo-nfs-svm
 snapmirror initialize -source-path demo-nfs-svm:vol4_mirrored -destination-path demo-nfs-svm:vol4_mirror_dest -type DP
