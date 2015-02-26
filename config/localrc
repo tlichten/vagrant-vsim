@@ -48,3 +48,4 @@ GIT_DEPTH=1
 HOST_IP=192.168.33.10
 OS_HOST_IP=$HOST_IP
 GLANCE_IMAGE_DIR=/mnt/glance/images
+enable_plugin manila https://github.com/openstack/manila

@@ -51,29 +51,6 @@ then
 
 fi
 
-MANILA=$PWD/manila
-# check if manila is already there
-if [ ! -d "$MANILA" ]
-then
-  echo "Download manila into $MANILA"
-
-  # clone manila
-  su $OS_USER -c "cd && git clone -b $MANILA_BRANCH https://github.com/openstack/manila.git $MANILA"
-
-  echo "Copy configuration"
-
-  # copy manila install and start script
-  echo "copy config from $MANILA/contrib/devstack/lib/manila to $DEVSTACK/lib"
-  cp $MANILA/contrib/devstack/lib/manila $DEVSTACK/lib
-
-  # copy manila extras script
-  echo "copy extras script from $MANILA/contrib/devstack/extras.d/70-manila.sh to $DEVSTACK/extras.d"
-  cp $MANILA/contrib/devstack/extras.d/70-manila.sh $DEVSTACK/extras.d
-
-
-
-fi
-
 # Copy NetApp configs
 
 # Copy nfs shares

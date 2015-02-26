@@ -1,4 +1,4 @@
-security login create -username vagrant -application ontapi -authmethod password -role admin -vserver VSIM
+security login create -username vagrant -application ontapi -authmethod password -role admin
 vserver create -vserver demo-iscsi-svm -rootvolume vol1 -aggregate aggr1 -ns-switch file -rootvolume-security-style unix
 vserver create -vserver demo-nfs-svm -rootvolume vol1 -aggregate aggr1 -ns-switch file -rootvolume-security-style unix
 iscsi create -vserver demo-iscsi-svm
