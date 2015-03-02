@@ -132,24 +132,26 @@ module VagrantPlugins
             puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
             exit
           end
-          ask_to_add_vsim_unless_exists
+          ask_to_add_vsim_unless_exists(env)
         end
         @app.call(env)
       end
 
-      def add_vsim
+      def add_vsim(env)
         if !File.exists?(File.expand_path("../#{BASE_IMAGE}", __FILE__))
           puts "\n\n"
           puts "#{BOX_NAME} base image #{BASE_IMAGE} not found."
           puts "Download the Clustered-Ontap Simulator 8.2.2P1 for VMware Workstation, VMware Player, and VMware Fusion from"
           puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
           puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
-          FileUtils.rm_rf "#{BOX_NAME}.box.lock"
           exit
         end
 
         puts "Preparing to add #{BOX_NAME} to vagrant. This may take a few minutes."
         template_dir = File.join("template", ".")
+        if Dir.exist? "tmp"
+          FileUtils.rm_rf "tmp"
+        end
         tmp_dir = "tmp"
         FileUtils.mkdir tmp_dir 
         result = Vagrant::Util::Subprocess.execute("bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", BASE_IMAGE.to_s)
@@ -166,31 +168,42 @@ module VagrantPlugins
         FileUtils.mv(box_file, tmp_dir)
         FileUtils.rm_rf vsim_dir
         puts "Adding #{BOX_NAME} box to vagrant"
-        `cd #{tmp_dir} && vagrant box add #{BOX_NAME} #{BOX_NAME}.box`
+        env[:action_runner].run(Vagrant::Action.action_box_add, {
+          :box_name => BOX_NAME,
+          :box_provider => "virtualbox",
+          :box_url => File.join(tmp_dir, "#{BOX_NAME}.box"),
+          :box_force => true,
+          :box_download_insecure => true,
+        })
         FileUtils.rm_rf tmp_dir
         puts "Done: #{BOX_NAME} box added to vagrant."
       end
 
-      def ask_to_add_vsim_unless_exists
-        if !File.exists?(File.expand_path("../#{BOX_NAME}.box.lock", __FILE__))
-          FileUtils.touch "#{BOX_NAME}.box.lock"
-          if ! `vagrant box list`.include? BOX_NAME
+      def ask_to_add_vsim_unless_exists(env)
+          boxes = {}
+          env[:box_collection].all.each do |n, v, p|
+            boxes[n] ||= {}
+            boxes[n][p] ||= []
+            boxes[n][p] << v
+          end
+          all_box = boxes[BOX_NAME]
+
+          if !all_box
             while true
               puts "The vagrant #{BOX_NAME} box was not found."
               puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
               case STDIN.getc
                 when 'Y', 'y', 'yes'
-                  add_vsim
+                  add_vsim(env)
                   break
                 when /\A[nN]o?\Z/ #n or no
-                  FileUtils.rm_rf "#{BOX_NAME}.box.lock"
                   exit
               end
             end
+          else
+            puts "VSim found"
           end
-          FileUtils.rm_rf "#{BOX_NAME}.box.lock"
         end
-      end
     end
 
     class Plugin < Vagrant.plugin("2")
