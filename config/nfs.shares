@@ -1,4 +1,0 @@
-10.0.207.40:/vol2_dedup -o sec=sys
-10.0.207.40:/vol3_compressed -o sec=sys
-10.0.207.40:/vol4_mirrored -o sec=sys
-10.0.207.40:/vol6_plain -o sec=sys
