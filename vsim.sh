@@ -111,7 +111,7 @@ sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGM
 
 echo "Running additional commands"
 while read -u 3 p; do
-  [[ ! -z "$p" ]] && continue
+  [[ -z "$p" ]] && continue
   echo $p
   [[ "$p" =~ ^#.*$ ]] && continue
   sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t "$p" 2>/dev/null
