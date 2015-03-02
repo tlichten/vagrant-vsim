@@ -10,7 +10,6 @@ VAGRANTFILE_API_VERSION = "2"
 
 # .3 is the expected host address to be assigned through DHCP, do not change
 NODE_MGMT_IP ||= "10.0.207.3"
-ENV['OS_HOST_IP'] = DEVSTACK_HOST_IP
 ENV['NODE_MGMT_IP'] = NODE_MGMT_IP
 ENV['CLUSTER_BASE_LICENSE'] ||= CLUSTER_BASE_LICENSE
 VBOXNET_HOST_GW_IP ||= NODE_MGMT_IP.rpartition(".")[0] + ".254"
@@ -224,7 +223,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm", :id, "--cpus", "1"]
     end
     servicevm.vm.network "private_network", ip: SERVICEVM_HOST_IP
-    servicevm.vm.provision :shell, :path => "service.sh"
+    servicevm.vm.provision :shell, :path => "vagrant_servicevm.sh"
     if Vagrant.has_plugin?("vagrant-cachier")
       servicevm.cache.scope = :box
     end
@@ -255,7 +254,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, auto_config: false, :mac => "0800DEADAC1D"
     vsim.vm.network "private_network", ip: VBOXNET_HOST_GW_IP, auto_config: false
 
-    vsim.vm.provision :shell, :path => "vsim.sh"
+    vsim.vm.provision :shell, :path => "vagrant_vsim.sh"
 
     vsim.vm.provider "virtualbox" do |p|
     #  p.gui = true
