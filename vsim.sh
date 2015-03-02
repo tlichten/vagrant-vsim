@@ -73,17 +73,6 @@ read -d '' SSH_ENABLE_PUBLICKEY << EOF
 </netapp>
 EOF
 
-read -d '' DISK_ASSIGN << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-
-<netapp xmlns="http://www.netapp.com/filer/admin" version="1.21">
-  <disk-sanown-assign>
-    <all>true</all>
-    <node-name>VSIM-01</node-name>
-  </disk-sanown-assign>
-</netapp>
-EOF
-
 read -d '' ADD_LICENSES << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 
@@ -93,17 +82,6 @@ read -d '' ADD_LICENSES << EOF
       <license-code-v2>$LICENSES</license-code-v2>
     </codes>
   </license-v2-add>
-</netapp>
-EOF
-
-read -d '' AGGR_CREATE << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-
-<netapp xmlns="http://www.netapp.com/filer/admin" version="1.21">
-  <aggr-create>
-    <aggregate>aggr1</aggregate>
-    <disk-count>25</disk-count>
-  </aggr-create>
 </netapp>
 EOF
 
@@ -117,9 +95,6 @@ sleep 10
 echo "Enabling SSH public key auth"
 /usr/bin/curl -X POST -d "$SSH_ENABLE_PUBLICKEY" -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
 sleep 5
-echo "Assigning disks"
-/usr/bin/curl -X POST -d "$DISK_ASSIGN"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 20
 
 if [ -n "$LICENSES" ]; then
   echo "Adding additional licenses $LICENSES"
@@ -127,17 +102,20 @@ if [ -n "$LICENSES" ]; then
   sleep 5
 fi
 
-echo "Creating additional aggregate"
-/usr/bin/curl -X POST -d "$AGGR_CREATE"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 15
+echo "Enabling Ontapi access for admin user $CLUSTER_USERNAME"
+sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t "security login create -username $CLUSTER_USERNAME -application ontapi -authmethod password -role admin" 2>/dev/null
+
 echo "Adding public key for $CLUSTER_USERNAME"
 sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t 'security login publickey create -username vagrant -index 0 -publickey "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ=="' 2>/dev/null
 
+
 echo "Running additional commands"
 while read -u 3 p; do
+  [[ ! -z "$p" ]] && continue
   echo $p
+  [[ "$p" =~ ^#.*$ ]] && continue
   sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t "$p" 2>/dev/null
-  sleep 10
+  sleep 15
 done 3</vagrant/vsim.cmds
 
 echo "SSH is available at $NODE_MGMT_IP. username $CLUSTER_USERNAME, password $PASSWORD"

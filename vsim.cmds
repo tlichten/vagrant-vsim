@@ -1,29 +1,8 @@
-security login create -username vagrant -application ontapi -authmethod password -role admin
-vserver create -vserver demo-iscsi-svm -rootvolume vol1 -aggregate aggr1 -ns-switch file -rootvolume-security-style unix
-vserver create -vserver demo-nfs-svm -rootvolume vol1 -aggregate aggr1 -ns-switch file -rootvolume-security-style unix
-iscsi create -vserver demo-iscsi-svm
-nfs create -vserver demo-nfs-svm -access true
-network interface create -vserver demo-iscsi-svm -lif demo-iscsi-data -role data -data-protocol iscsi -home-node VSIM-01 -home-port e0c -address 10.0.207.30 -netmask 255.255.255.0
-volume create -vserver demo-iscsi-svm -volume vol2 -aggregate aggr1 -size 10g -space-guarantee none -unix-permissions ---rwxrwxrwx
-vserver export-policy rule create -vserver demo-iscsi-svm -policyname default -clientmatch 0.0.0.0/0 -rorule any -rwrule any -superuser any -anon 0
-network interface create -vserver demo-nfs-svm -lif demo-nfs-data -role data -home-node VSIM-01 -home-port e0c -address 10.0.207.40 -netmask 255.255.255.0
-vserver export-policy rule create -vserver demo-nfs-svm -policyname default -clientmatch 0.0.0.0/0 -rorule any -rwrule any -superuser any -anon 0
-volume create -vserver demo-nfs-svm -volume vol2_dedup -aggregate aggr1 -size 10g -junction-path /vol2_dedup -space-guarantee none -unix-permissions ---rwxrwxrwx
-volume create -vserver demo-nfs-svm -volume vol3_compressed -aggregate aggr1 -size 10g -junction-path /vol3_compressed -space-guarantee none -unix-permissions ---rwxrwxrwx
-volume create -vserver demo-nfs-svm -volume vol4_mirrored -aggregate aggr1 -size 10g -junction-path /vol4_mirrored -space-guarantee none -unix-permissions ---rwxrwxrwx
-volume create -vserver demo-nfs-svm -volume vol4_mirror_dest -aggregate aggr1 -size 10g -type DP -space-guarantee none 
-snapmirror create -source-path demo-nfs-svm:vol4_mirrored -destination-path demo-nfs-svm:vol4_mirror_dest -type DP -vserver demo-nfs-svm
-snapmirror initialize -source-path demo-nfs-svm:vol4_mirrored -destination-path demo-nfs-svm:vol4_mirror_dest -type DP
-snapmirror resync -destination-path demo-nfs-svm:vol4_mirror_dest 
-volume create -vserver demo-nfs-svm -volume vol5_glance -aggregate aggr1 -size 10g -junction-path /vol5_glance -space-guarantee none -unix-permissions ---rwxrwxrwx
-volume create -vserver demo-nfs-svm -volume vol6_plain -aggregate aggr1 -size 10g -junction-path /vol6_plain -unix-permissions ---rwxrwxrwx
+# Assigning all disks to node
+disk assign -all true -node VSIM-01
 
-volume efficiency on -vserver demo-nfs-svm -volume vol2_dedup
-volume efficiency on -vserver demo-nfs-svm -volume vol5_glance
-volume efficiency on -vserver demo-nfs-svm -volume vol3_compressed
-volume efficiency modify -vserver demo-nfs-svm -volume vol3_compressed -compression true -inline-compression true
-qos policy-group create service_class_throttled -vserver demo-nfs-svm -max-throughput 1500IOPS
-nfs modify -vserver demo-nfs-svm -v4.0 enabled -v4.1 enabled -v4.1-pnfs enabled -vstorage enabled
-vserver show
-volume show
+#Creating additional aggregate
+aggr create -aggregate aggr1 -diskcount 25
+
+# Cluster status
 cluster show
