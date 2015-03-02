@@ -15,7 +15,7 @@ API_ENDPOINT="http://admin@$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLreque
 
 sudo iptables -t nat -D PREROUTING -i eth1 -p tcp --dport 22222 -j REDIRECT --to-port 22 
 
-sudo echo "1" > /proc/sys/net/ipv4/ip_forward
+sudo sh -c 'echo "1" > /proc/sys/net/ipv4/ip_forward'
 
 sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22222 -j DNAT --to-destination $NODE_MGMT_IP:22
 
