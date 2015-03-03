@@ -43,11 +43,11 @@ Uninstall
 ============
  - Use a command line and go to this directory, e.g.  ```~/vagrant-vsim/```
  - Run 
- ```bash
- $ vagrant destroy
- $ vagrant box remove VSim
- $ vagrant box remove ubuntu/trusty64
- ```
+```bash
+$ vagrant destroy
+$ vagrant box remove VSim
+$ vagrant box remove ubuntu/trusty64
+```
  - Uninstall Virtualbox and Vagrant
 
 Known issues
