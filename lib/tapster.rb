@@ -119,19 +119,38 @@ module VagrantPlugins
       end
 
       def call(env)
-        # https://stackoverflow.com/a/20860087
-        if ! File.exists?(".vagrant/machines/vsim/virtualbox/id")
-          if CLUSTER_BASE_LICENSE.nil? || CLUSTER_BASE_LICENSE.empty?
-            puts "\n\n"
-            puts "The cluster base license has not been specified."
-            puts "Obtain the Clustered-Ontap Simulator #{CDOT_VERSION} cluster base license from"
-            puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
-            puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
-            exit
-          end
-          ask_to_add_vsim_unless_exists(env)
+        if CLUSTER_BASE_LICENSE.nil? || CLUSTER_BASE_LICENSE.empty?
+          puts "\n\n"
+          puts "The cluster base license has not been specified."
+          puts "Obtain the Clustered-Ontap Simulator #{CDOT_VERSION} cluster base license from"
+          puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
+          puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
+          exit
         end
+        ask_to_add_vsim_unless_exists(env)
         @app.call(env)
+      end
+
+      def ask_to_add_vsim_unless_exists(env)
+        boxes = {}
+        env[:box_collection].all.each do |n, v, p|
+          boxes[n] ||= {}
+        end
+        box_found = boxes[BOX_NAME]
+
+        if !box_found
+          while true
+            puts "The vagrant #{BOX_NAME} box was not found."
+            puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
+            case STDIN.getc
+              when 'Y', 'y', 'yes'
+                add_vsim(env)
+                break
+              when /\A[nN]o?\Z/ #n or no
+                exit
+            end
+          end
+        end
       end
 
       def add_vsim(env)
@@ -173,28 +192,6 @@ module VagrantPlugins
         FileUtils.rm_rf tmp_dir
         puts "Done: #{BOX_NAME} box added to vagrant."
       end
-
-      def ask_to_add_vsim_unless_exists(env)
-          boxes = {}
-          env[:box_collection].all.each do |n, v, p|
-            boxes[n] ||= {}
-          end
-          box_found = boxes[BOX_NAME]
-
-          if !box_found
-            while true
-              puts "The vagrant #{BOX_NAME} box was not found."
-              puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
-              case STDIN.getc
-                when 'Y', 'y', 'yes'
-                  add_vsim(env)
-                  break
-                when /\A[nN]o?\Z/ #n or no
-                  exit
-              end
-            end
-          end
-        end
     end
 
     class Plugin < Vagrant.plugin("2")
