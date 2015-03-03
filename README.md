@@ -36,11 +36,19 @@ The goal of this project is to experimentally provide a largely automated, turn-
  
 ## Usage
 
- - Run ```vagrant up``` from this directory, e.g.```~/vagrant-vsim/```
+ - From this directory, e.g.  ```~/vagrant-vsim/```, run:
+```bash
+$ vagrant up
+```
  - You will be asked to import the simulator as a Vagrant box on first run. Press ```y``` to proceed and import. The import will take a few minutes.
- - Wait until the VSim is ready. Once ready, run ```vagrant ssh vsim``` to access the VSim console
- - When done, you can destroy the entire environment running ```vagrant destroy``` and recreate it with ```vagrant up```
-
+ - Wait until the VSim is ready. Once ready, to access the VSim console run:
+```bash
+vagrant ssh vsim
+```
+ - When done, you can destroy the entire environment. Run:
+```bash
+$ vagrant destroy
+```
 
 ## Uninstall
 
