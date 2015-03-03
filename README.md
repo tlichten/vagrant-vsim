@@ -2,11 +2,14 @@
 
 Use [Vagrant](https://www.vagrantup.com) to **experimentally** manage a Clustered Data Ontap simulator (cDot VSim) 
 
-**Credits**: This project makes use of the excellent instructions on [how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS](http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89)
+##### Credits
+This project makes use of the excellent instructions on [how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS](http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89)
 
-**Caution**: This project is **experimental** and uses [Virtualbox](https://www.virtualbox.org) which is a **non-supported** configuration for the simulator. There are smaller *hacks* for making this work and it is not pretty. Use at own risk. Please see known issues at the bottom.
+##### Caution
+This project is **experimental** and uses [Virtualbox](https://www.virtualbox.org) which is a **non-supported** configuration for the simulator. There are smaller *hacks* for making this work and it is not pretty. Use at own risk. Please see known issues at the bottom.
 
-**Goal**: The goal of this project is to experimentally provide a largely automated, turn-key setup of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack.
+##### Goal
+The goal of this project is to experimentally provide a largely automated, turn-key setup of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack.
 
 ## System requirements
 
