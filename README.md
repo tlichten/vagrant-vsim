@@ -43,7 +43,7 @@ $ vagrant up
  - You will be asked to import the simulator as a Vagrant box on first run. Press ```y``` to proceed and import. The import will take a few minutes.
  - Wait until the VSim is ready. Once ready, to access the VSim console run:
 ```bash
-vagrant ssh vsim
+$ vagrant ssh vsim
 ```
  - When done, you can destroy the entire environment. Run:
 ```bash
