@@ -1,6 +1,6 @@
 # TAPSTER
 
-Use [Vagrant](https://www.vagrantup.com) to **experimentally** manage a Clustered Data Ontap simulator (cDot VSim) 
+Use [Vagrant](https://www.vagrantup.com) to create an **experimental** Clustered Data Ontap simulator environment
 
 ##### Credits
 This project makes use of the excellent instructions on [how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS](http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89)
