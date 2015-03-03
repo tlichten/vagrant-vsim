@@ -44,8 +44,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
 
 ## Uninstall
 
- - Use a command line and go to this directory, e.g.  ```~/vagrant-vsim/```
- - Run 
+ - From this directory, e.g.  ```~/vagrant-vsim/```, run:
 ```bash
 $ vagrant destroy
 $ vagrant box remove VSim
