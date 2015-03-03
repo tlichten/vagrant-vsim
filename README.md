@@ -63,10 +63,10 @@ $ vagrant box remove ubuntu/trusty64
 ## Known issues
 
  - There is **no error handling** in place, please do not just abort the program when things take a while. At first start, please be patient, preparing the VSim Vagrant box can take several minutes.
- - Occassionaly, ```vagrant destroy``` will error can not delete all VM disks. Manual deletion is required.
+ - Occassionaly, ```vagrant destroy``` will error and can not delete all VM disks. Manual deletion is required.
  - The setup is limited to a single node cluster
 
- ```license
+```license
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -74,4 +74,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
- ```
+```
