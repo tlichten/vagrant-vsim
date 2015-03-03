@@ -30,7 +30,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
  - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/tapster/archive/master.zip) the project and extract it.
  - Download [*Clustered Data Ontap 8.2.3 Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/)
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
- - Configure the the Cluster base license. **Important**: Use the **non-ESX build** license. Edit ```vsim.conf```, at the top set the 8.2.3 Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).
+ - Configure the Cluster base license. **Important**: Use the **non-ESX build** license. Edit ```vsim.conf```, at the top set the 8.2.3 Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).
  - Optionally, edit  ```vsim.conf ``` and configure any additional licenses as a comma separated list within  ```LICENSES ``` accordingly. **Important**: Use the **non-ESX build licenses**. The additional licenses can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).
  - **Double check** you have added the **non-ESX build** licenses.
  
