@@ -16,7 +16,7 @@ if [ ! -d "$TAPSTER" ]
 then
 	echo "Download tapster into $TAPSTER"
 	# clone tapster
-	su $OS_USER -c "cd && git clone -b tapper https://github.com/tlichten/vagrant-devstack-manila.git $TAPSTER"
+	su $OS_USER -c "cd && git clone https://github.com/tlichten/tapster.git $TAPSTER"
 fi
 
 # start tapster provisioning
