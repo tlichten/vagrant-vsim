@@ -171,7 +171,7 @@ module VagrantPlugins
         FileUtils.mkdir tmp_dir 
         result = Vagrant::Util::Subprocess.execute("bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", BASE_IMAGE.to_s)
         vsim_dir = File.join(tmp_dir, "vsim_netapp-cm")
-        template_dir = File.join("template", ".")
+        template_dir = File.join(File.dirname(__FILE__) + "/../template", ".")
         FileUtils.cp_r template_dir, vsim_dir
         puts "Packaging #{BOX_NAME} box for vagrant"
         Vagrant::Util::SafeChdir.safe_chdir(vsim_dir) do

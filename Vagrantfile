@@ -3,8 +3,8 @@
 
 require 'fileutils'
 
-tapsterfile = 'lib/tapster.rb'
-load tapsterfile if File.exist?(tapsterfile)
+tapsterfile =  File.dirname(__FILE__) + '/lib/tapster.rb'
+load tapsterfile
 
 VAGRANTFILE_API_VERSION = "2"
 
