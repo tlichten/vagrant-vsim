@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.cpus = 1
     end
     servicevm.vm.network "private_network", ip: SERVICEVM_HOST_IP
-    servicevm.vm.provision :shell, :path => "provision/vagrant.sh", :args => "servicevm"
+    servicevm.vm.provision :shell, :path => File.dirname(__FILE__) + "/provision/vagrant.sh", :args => "servicevm"
 
     if Vagrant.has_plugin?("vagrant-cachier")
       servicevm.cache.scope = :box
@@ -60,7 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vsim.vm.network "private_network", ip: NODE_MGMT_IP, auto_config: false, :mac => "0800DEADAC1D"
     vsim.vm.network "private_network", ip: NODE_MGMT_IP, auto_config: false
 
-    vsim.vm.provision :shell, :path => "provision/vagrant.sh", :args => "vsim"
+    vsim.vm.provision :shell, :path => File.dirname(__FILE__) + "/provision/vagrant.sh", :args => "vsim"
 
     vsim.vm.provider "virtualbox" do |v|
     #  v.gui = true
