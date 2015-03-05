@@ -32,7 +32,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
  - Configure the Cluster base license.  
  Edit ```vsim.conf```, at the top set the 8.2.3 Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
-vsim.conf: 
+`vsim.conf`: 
 ```bash
 ...
 # Specify the Cluster Base License
@@ -63,7 +63,7 @@ $ vagrant destroy
 
  - Customize and configure any additional licenses like Flexclone or Snapmirror.  
 The additional licenses can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
-vsim.conf: 
+`vsim.conf`: 
 ```bash
 ...
 # Define additional licenses,e.g. NFS, CIFS, as a comma seperated list without spaces
@@ -76,7 +76,7 @@ LICENSES="YVUXXXXXXXXXXXXXXXXXXXXXXXXX,SOHXXXXXXXXXXXXXXXXXXXXXXXXX,MBXXXXXXXXXX
 - Customize networking  
 The simulator will automatically be configured with a node-mgmt lif. You can customize the IP address of that lif to match your Vagrant networking setup.  
 **Please note**: A dnsmasq process is used to offer the IP to the simulator. Please ensure you don't have a conflicting DHCP server on the same VBOXNet.  
-vsim.conf: 
+`vsim.conf`: 
 ```ruby
 ...
 # Host address for the VSim node auto mgmt lif which exposes ONTAPI
@@ -87,7 +87,7 @@ NODE_MGMT_IP="10.0.207.3"
 
 - Customize the Clustered Data Ontap environment  
 You can customize any additional commands that will automatically be executed line-by-line once the simulator is running and the cluster is set up.  
-vsim.cmds:
+`vsim.cmds`:
 ```bash
 # Assigning all disks to node
 disk assign -all true -node VSIM-01
