@@ -1,6 +1,6 @@
 # TAPSTER
 
-Use [Vagrant](https://www.vagrantup.com) to create an **experimental** Clustered Data Ontap simulator environment
+Use [Vagrant](https://www.vagrantup.com) to automatically create and configure an **experimental**, reproducible, and portable Clustered Data Ontap simulator environment
 
 ##### Credits
 This project makes use of the excellent instructions on [how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS](http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89)
@@ -9,7 +9,7 @@ This project makes use of the excellent instructions on [how to simulate Data ON
 This project is **experimental** and uses [Virtualbox](https://www.virtualbox.org) which is a **non-supported** configuration for the simulator. There are smaller *hacks* for making this work and it is not pretty. Use at own risk. Please see known issues at the bottom.
 
 ##### Goal
-The goal of this project is to experimentally provide a largely automated, turn-key setup of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack.
+The goal of this project is to experimentally provide a largely automated, turn-key setup and configuration of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack. Experimental environments can automatically be created and configured, they are reproducible and portable.
 
 ## System requirements
 
@@ -30,10 +30,19 @@ The goal of this project is to experimentally provide a largely automated, turn-
  - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/tapster/archive/master.zip) the project and extract it.
  - Download [*Clustered Data Ontap 8.2.3 Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/)
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
- - Configure the Cluster base license. **Important**: Use the **non-ESX build** license. Edit ```vsim.conf```, at the top set the 8.2.3 Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).
- - Optionally, edit  ```vsim.conf ``` and configure any additional licenses as a comma separated list within  ```LICENSES ``` accordingly. **Important**: Use the **non-ESX build licenses**. The additional licenses can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).
- - **Double check** you have added the **non-ESX build** licenses.
- 
+ - Configure the Cluster base license.  
+ Edit ```vsim.conf```, at the top set the 8.2.3 Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
+`vsim.conf`: 
+```bash
+...
+# Specify the Cluster Base License
+# Important: Use the Cluster Base license for Clustered-Ontap Simulator 8.2.3 for
+# VMware Workstation, VMware Player, and VMware Fusion
+CLUSTER_BASE_LICENSE="SMKXXXXXXXXXXXXXXXXXXXXXXXXX"
+...
+```
+**Important**: Use the **non-ESX build** license. 
+
 ## Usage
 
  - From this directory, e.g.  ```~/vagrant-vsim/```, run:
@@ -50,6 +59,45 @@ $ vagrant ssh vsim
 $ vagrant destroy
 ```
 
+## Customization
+
+ - Customize and configure any additional licenses like Flexclone or Snapmirror.  
+The additional licenses can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
+`vsim.conf`: 
+```bash
+...
+# Define additional licenses,e.g. NFS, CIFS, as a comma seperated list without spaces
+# Important: Use the licenses for the non-ESX build for the first node in a cluster
+LICENSES="YVUXXXXXXXXXXXXXXXXXXXXXXXXX,SOHXXXXXXXXXXXXXXXXXXXXXXXXX,MBXXXXXXXXXXXXXXXXXXXXXXXXXX"
+...
+```
+**Important**: Use the **non-ESX build** licenses. 
+
+- Customize networking  
+The simulator will automatically be configured with a node-mgmt lif. You can customize the IP address of that lif to match your Vagrant networking setup.  
+**Please note**: A dnsmasq process is used to offer the IP to the simulator. Please ensure you don't have a conflicting DHCP server on the same VBOXNet.  
+`vsim.conf`: 
+```ruby
+...
+# Host address for the VSim node auto mgmt lif which exposes ONTAPI
+# Note: An additional service vm will deployed w/ the host address of x.x.x.253
+NODE_MGMT_IP="10.0.207.3"
+...
+```
+
+- Customize the Clustered Data Ontap environment  
+You can customize any additional commands that will automatically be executed line-by-line once the simulator is running and the cluster is set up.  
+`vsim.cmds`:
+```bash
+# Assigning all disks to node
+disk assign -all true -node VSIM-01
+# Creating additional aggregate
+aggr create -aggregate aggr1 -diskcount 25
+# Cluster status
+cluster show
+# Add your own commands
+```  
+
 ## Uninstall
 
  - From this directory, e.g.  ```~/vagrant-vsim/```, run:
@@ -63,8 +111,8 @@ $ vagrant box remove ubuntu/trusty64
 ## Known issues
 
  - There is **no error handling** in place, please do not just abort the program when things take a while. At first start, please be patient, preparing the VSim Vagrant box can take several minutes.
- - Occassionaly, ```vagrant destroy``` will error and can not delete all VM disks. Manual deletion is required.
- - The setup is limited to a single node cluster
+ - Occassionaly, ```vagrant destroy``` will error and can not delete all VM disks. These stale VMs may consume significant disk space. Manual deletion is required. Delete those VMs from your Virtualbox directory, e.g. `~\VirtualBox VMs`
+ - The setup is currently limited to a single node cluster
 
 ```license
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
