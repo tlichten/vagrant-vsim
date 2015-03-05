@@ -8,9 +8,9 @@ fi
 
 # Please use vsim.conf for configuration instead of this file
 CLUSTER_BASE_LICENSE=$CLUSTER_BASE_LICENSE
-NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.155.3}
-CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
-PASSWORD=${PASSWORD:-netapp123}
+export NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.155.3}
+export CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
+export PASSWORD=${PASSWORD:-netapp123}
 API_ENDPOINT="http://admin@$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
 
 sudo iptables -t nat -D PREROUTING -i eth1 -p tcp --dport 22222 -j REDIRECT --to-port 22 
@@ -117,6 +117,8 @@ while read -u 3 p; do
   sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGMT_IP -t "$p" 2>/dev/null
   sleep 15
 done 3</vagrant/vsim.cmds
+
+cd /home/vagrant/chef && chef-solo -c solo.rb -j web.json
 
 echo "SSH is available at $NODE_MGMT_IP. username $CLUSTER_USERNAME, password $PASSWORD"
 echo "VSim ready. Run 'vagrant ssh vsim' for console access."

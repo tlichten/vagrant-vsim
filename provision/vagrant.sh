@@ -8,7 +8,7 @@ sudo apt-get install -qqy git
 PROVISION=$1
 
 # determine checkout folder
-OS_USER=vagrant
+export OS_USER=vagrant
 PWD=$(su $OS_USER -c "cd && pwd")
 TAPSTER="$PWD/tapster"
 # check if tapster is already there

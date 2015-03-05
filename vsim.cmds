@@ -1,8 +1,5 @@
 # Assigning all disks to node
 disk assign -all true -node VSIM-01
 
-#Creating additional aggregate
-aggr create -aggregate aggr1 -diskcount 25
-
 # Cluster status
 cluster show

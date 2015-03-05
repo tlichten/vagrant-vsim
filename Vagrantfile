@@ -31,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     servicevm.vm.hostname = "servicevm"
     servicevm.ssh.insert_key = false
     servicevm.vm.provider "virtualbox" do |v|
-      v.memory = 128
+      v.memory = 512
       v.cpus = 1
     end
     servicevm.vm.network "private_network", ip: SERVICEVM_HOST_IP
@@ -61,7 +61,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vsim.vm.network "private_network", ip: NODE_MGMT_IP, auto_config: false
 
     vsim.vm.provision :shell, :path => File.dirname(__FILE__) + "/provision/vagrant.sh", :args => "vsim"
-
     vsim.vm.provider "virtualbox" do |v|
     #  v.gui = true
     end
