@@ -1,6 +1,6 @@
 # TAPSTER
 
-Use [Vagrant](https://www.vagrantup.com) to automatically create and configure an **experimental**, reproducible, and portable Clustered Data Ontap simulator environment
+Use [Vagrant](https://www.vagrantup.com) to automatically create and configure an **experimental**, reproducible, and portable Clustered Data Ontap simulator environment  
 
 ##### Credits
 This project makes use of the excellent instructions on [how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS](http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89)
@@ -9,7 +9,22 @@ This project makes use of the excellent instructions on [how to simulate Data ON
 This project is **experimental** and uses [Virtualbox](https://www.virtualbox.org) which is a **non-supported** configuration for the simulator. There are smaller *hacks* for making this work and it is not pretty. Use at own risk. Please see known issues at the bottom.
 
 ##### Goal
-The goal of this project is to experimentally provide a largely automated, turn-key setup and configuration of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack. Experimental environments can automatically be created and configured, they are reproducible and portable.
+The goal of this project is to experimentally provide a largely automated, turn-key setup and configuration of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack. Experimental environments can automatically be created and configured, they are reproducible and portable.  
+
+##### Table of Contents
+* [System requirements](#system-requirements)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Customization](#customization)
+  * [Additional Licenses](#additional-licenses)
+  * [Networking](#networking)
+  * [Customize the Clustered Data Ontap environment](#customize-the-clustered-data-ontap-environment)
+    * [CLI commands](#cli-commands)
+    * [Chef](#chef)
+    * [Ontapi](#ontapi)
+* [Uninstall](#uninstall)
+* [Known issues](#known-issues)
 
 ## System requirements
 
