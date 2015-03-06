@@ -61,7 +61,8 @@ $ vagrant destroy
 
 ## Customization
 
- - Customize and configure any additional licenses like Flexclone or Snapmirror.  
+##### Additional Licenses
+Customize and configure any additional licenses like Flexclone or Snapmirror.  
 The additional licenses can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
 `vsim.conf`: 
 ```bash
@@ -73,7 +74,7 @@ LICENSES="YVUXXXXXXXXXXXXXXXXXXXXXXXXX,SOHXXXXXXXXXXXXXXXXXXXXXXXXX,MBXXXXXXXXXX
 ```
 **Important**: Use the **non-ESX build** licenses. 
 
-- Customize networking  
+##### Networking  
 The simulator will automatically be configured with a node-mgmt lif. You can customize the IP address of that lif to match your Vagrant networking setup.  
 **Please note**: A dnsmasq process is used to offer the IP to the simulator. Please ensure you don't have a conflicting DHCP server on the same VBOXNet.  
 `vsim.conf`: 
@@ -85,18 +86,42 @@ NODE_MGMT_IP="10.0.207.3"
 ...
 ```
 
-- Customize the Clustered Data Ontap environment  
+##### Customize the Clustered Data Ontap environment 
+
+CLI commands and Chef can be used to customize the environment.
+
+###### CLI commands  
 You can customize any additional commands that will automatically be executed line-by-line once the simulator is running and the cluster is set up.  
 `vsim.cmds`:
 ```bash
 # Assigning all disks to node
 disk assign -all true -node VSIM-01
-# Creating additional aggregate
-aggr create -aggregate aggr1 -diskcount 25
+
 # Cluster status
 cluster show
+
 # Add your own commands
-```  
+```
+
+###### Chef
+You can customize the environment using the [NetApp cookbook for Chef](https://github.com/chef-partners/netapp-cookbook).  
+Configure your resources in the file `/chef/cookbooks/tapster/recipes/default.rb`
+
+```ruby
+#include_recipe "netapp::aggregate"
+
+netapp_aggregate "aggr1" do
+	name "aggr1"
+	disk_count 25
+	action :create
+end
+
+# Add your own resources
+```
+The NetApp cookbook project provides [examples on the resources you can use](https://github.com/chef-partners/netapp-cookbook#netapp_user).
+
+##### Ontapi
+Though there is no convinience method provided, you can still manually use Ontapi. As an example, this project makes [use of ZAPI calls for the initial setup](https://github.com/tlichten/tapster/blob/master/provision/vsim.sh#L89).
 
 ## Uninstall
 
