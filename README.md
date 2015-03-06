@@ -120,7 +120,7 @@ end
 ```
 The NetApp cookbook project provides [examples on the resources you can use](https://github.com/chef-partners/netapp-cookbook#netapp_user).
 
-##### Ontapi
+###### Ontapi
 Though there is no convinience method provided, you can still manually use Ontapi. As an example, this project makes [use of ZAPI calls for the initial setup](https://github.com/tlichten/tapster/blob/master/provision/vsim.sh#L89).
 
 ## Uninstall
