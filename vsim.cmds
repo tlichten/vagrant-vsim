@@ -1,5 +1,2 @@
-# Assigning all disks to node
-disk assign -all true -node VSIM-01
-
 # Cluster status
 cluster show
