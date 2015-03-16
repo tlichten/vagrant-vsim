@@ -31,7 +31,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
  - 8 GB RAM
  - 15-20 GB of free disk space
  - SSD recommended
- - Linux / Mac / Windows
+ - Linux / Mac / Windows (alpha)
  - Internet connection
 
 ## Prerequisites
@@ -101,6 +101,22 @@ NODE_MGMT_IP="10.0.207.3"
 ...
 ```
 
+##### Proxy and Caching
+
+Add Vagrant plugins for the use with proxies and to enable caching
+
+###### Vagrant Proxyconf  
+If you are behind a proxy, you may want to install [Vagrant Proxyconf](https://github.com/tmatilai/vagrant-proxyconf)  
+```
+vagrant plugin install vagrant-proxyconf
+```
+
+###### Vagrant Cachier  
+To speed up the deployment and avoid unnecessary downloads, install  [Vagrant Cachier](https://github.com/fgrehm/vagrant-cachier)  
+```
+vagrant plugin install vagrant-cachier
+```
+
 ##### Customize the Clustered Data Ontap environment 
 
 CLI commands and Chef can be used to customize the environment.
@@ -153,6 +169,8 @@ $ vagrant box remove ubuntu/trusty64
  - There is **no error handling** in place, please do not just abort the program when things take a while. At first start, please be patient, preparing the VSim Vagrant box can take several minutes.
  - Occassionaly, ```vagrant destroy``` will error and can not delete all VM disks. These stale VMs may consume significant disk space. Manual deletion is required. Delete those VMs from your Virtualbox directory, e.g. `~\VirtualBox VMs`
  - The setup is currently limited to a single node cluster
+ - Clustered Data Ontap 8.2.3 - no support for 8.3
+ - Setup on Windows doesn't work reliably
 
 ```license
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
