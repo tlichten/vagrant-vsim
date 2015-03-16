@@ -8,10 +8,10 @@
   </References>
   <DiskSection>
     <Info>List of the virtual disks used in the package</Info>
-    <Disk ovf:capacity="1108344832" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="e9e1653a-1042-467f-ae62-69920d6f2650"/>
-    <Disk ovf:capacity="1616904192" ovf:diskId="vmdisk2" ovf:fileRef="file2" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="7d8f685b-34bf-49fc-9a06-4b66a996481a"/>
-    <Disk ovf:capacity="5370806272" ovf:diskId="vmdisk3" ovf:fileRef="file3" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="3512b4d3-ebab-4c68-9f62-1379eb467f33"/>
-    <Disk ovf:capacity="268435456000" ovf:diskId="vmdisk4" ovf:fileRef="file4" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="1bf9a976-bde3-4619-a9ec-1d04814938b4"/>
+    <Disk ovf:capacity="2037383168" ovf:diskId="vmdisk1" ovf:fileRef="file1" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="9bd83212-3822-4a29-9408-797d1b69c22d"/>
+    <Disk ovf:capacity="1616904192" ovf:diskId="vmdisk2" ovf:fileRef="file2" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="26ab4ffc-c9d2-4e46-afa5-5bc18dc9f26d"/>
+    <Disk ovf:capacity="5101322240" ovf:diskId="vmdisk3" ovf:fileRef="file3" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="e5c55cd7-b267-47b5-859c-3e2916083ccb"/>
+    <Disk ovf:capacity="268435456000" ovf:diskId="vmdisk4" ovf:fileRef="file4" ovf:format="http://www.vmware.com/interfaces/specifications/vmdk.html#streamOptimized" vbox:uuid="d1e05bae-8e90-4fb7-9d1d-cab344f81b28"/>
   </DiskSection>
   <NetworkSection>
     <Info>Logical networks used in the package</Info>
@@ -273,7 +273,7 @@
           </Adapter>
         </Network>
         <UART>
-          <Port slot="1" enabled="false" IOBase="0x3f8" IRQ="3" hostMode="Disconnected"/>
+          <Port slot="0" enabled="false" IOBase="0x3f8" IRQ="4" hostMode="Disconnected"/>
           <Port slot="1" enabled="false" IOBase="0x2f8" IRQ="3" hostMode="Disconnected"/>
         </UART>
         <LPT>
@@ -301,18 +301,18 @@
         </GuestProperties>
       </Hardware>
       <StorageControllers>
-        <StorageController name="IDE" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true">
+				<StorageController name="IDE" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true">
           <AttachedDevice type="HardDisk" port="0" device="0">
-            <Image uuid="{e9e1653a-1042-467f-ae62-69920d6f2650}"/>
+            <Image uuid="{9bd83212-3822-4a29-9408-797d1b69c22d}"/>
           </AttachedDevice>
           <AttachedDevice type="HardDisk" port="0" device="1">
-            <Image uuid="{7d8f685b-34bf-49fc-9a06-4b66a996481a}"/>
+            <Image uuid="{26ab4ffc-c9d2-4e46-afa5-5bc18dc9f26d}"/>
           </AttachedDevice>
           <AttachedDevice type="HardDisk" port="1" device="0">
-            <Image uuid="{3512b4d3-ebab-4c68-9f62-1379eb467f33}"/>
+            <Image uuid="{e5c55cd7-b267-47b5-859c-3e2916083ccb}"/>
           </AttachedDevice>
           <AttachedDevice type="HardDisk" port="1" device="1">
-            <Image uuid="{1bf9a976-bde3-4619-a9ec-1d04814938b4}"/>
+            <Image uuid="{d1e05bae-8e90-4fb7-9d1d-cab344f81b28}"/>
           </AttachedDevice>
         </StorageController>
         <StorageController name="Floppy" type="I82078" PortCount="1" useHostIOCache="true" Bootable="true">
