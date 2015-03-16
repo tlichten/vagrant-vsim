@@ -10,17 +10,17 @@ PROVISION=$1
 # determine checkout folder
 export OS_USER=vagrant
 PWD=$(su $OS_USER -c "cd && pwd")
-TAPSTER="$PWD/tapster"
-# check if tapster is already there
-if [ ! -d "$TAPSTER" ]
+VAGRANT_VSIM="$PWD/vagrant-vsim"
+# check if vagrant-vsim is already there
+if [ ! -d "$VAGRANT_VSIM" ]
 then
-	echo "Download tapster into $TAPSTER"
-	# clone tapster
-	su $OS_USER -c "cd && git clone https://github.com/tlichten/tapster.git $TAPSTER"
+	echo "Download vagrant-vsim into $VAGRANT_VSIM"
+	# clone vagrant-vsim
+	su $OS_USER -c "cd && git clone https://github.com/tlichten/vagrant-vsim.git $VAGRANT_VSIM"
 fi
 
-# start tapster provisioning
+# start vagrant-vsim provisioning
 echo "Start $PROVISION provisioning"
-PATH_PROVISION="$TAPSTER/provision"
+PATH_PROVISION="$VAGRANT_VSIM/provision"
 su $OS_USER -c "chmod +x $PATH_PROVISION/$PROVISION.sh"
 su $OS_USER -c "cd $PATH_PROVISION && ./$PROVISION.sh"

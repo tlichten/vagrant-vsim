@@ -3,8 +3,8 @@
 
 require 'fileutils'
 
-tapsterfile =  File.dirname(__FILE__) + '/lib/tapster.rb'
-load tapsterfile
+vagrant_vsimfile =  File.dirname(__FILE__) + '/lib/vagrant_vsim.rb'
+load vagrant_vsimfile
 
 VAGRANTFILE_API_VERSION = "2"
 

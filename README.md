@@ -1,4 +1,4 @@
-# TAPSTER
+# VAGRANT-VSIM
 
 Use [Vagrant](https://www.vagrantup.com) to automatically create and configure an **experimental**, reproducible, and portable Clustered Data Ontap simulator environment  
 
@@ -42,7 +42,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
 
 ## Installation
 
- - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/tapster/archive/master.zip) the project and extract it.
+ - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/vagrant-vsim/archive/master.zip) the project and extract it.
  - Download [*Clustered Data Ontap 8.2.3 Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/)
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
  - Configure the Cluster base license.  
@@ -120,7 +120,7 @@ cluster show
 
 ###### Chef
 You can customize the environment using the [NetApp cookbook for Chef](https://github.com/chef-partners/netapp-cookbook).  
-Configure your resources in the file `/chef/cookbooks/tapster/recipes/default.rb`
+Configure your resources in the file `/chef/cookbooks/vagrant-vsim/recipes/default.rb`
 
 ```ruby
 #include_recipe "netapp::aggregate"
@@ -136,7 +136,7 @@ end
 The NetApp cookbook project provides [examples on the resources you can use](https://github.com/chef-partners/netapp-cookbook#netapp_user).
 
 ###### Ontapi
-Though there is no convinience method provided, you can still manually use Ontapi. As an example, this project makes [use of ZAPI calls for the initial setup](https://github.com/tlichten/tapster/blob/master/provision/vsim.sh#L89).
+Though there is no convinience method provided, you can still manually use Ontapi. As an example, this project makes [use of ZAPI calls for the initial setup](https://github.com/tlichten/vagrant-vsim/blob/master/provision/vsim.sh#L89).
 
 ## Uninstall
 

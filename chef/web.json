@@ -1,3 +1,3 @@
 {
-  "run_list": [ "recipe[tapster]" ]
+  "run_list": [ "recipe[vagrant_vsim]" ]
 }
