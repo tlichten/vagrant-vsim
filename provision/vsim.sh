@@ -8,7 +8,9 @@ fi
 
 # Please use vsim.conf for configuration instead of this file
 CLUSTER_BASE_LICENSE=$CLUSTER_BASE_LICENSE
-export NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.155.3}
+export NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.207.3}
+BASEIP=`echo $NODE_MGMT_IP | cut -d"." -f1-3`
+export CLUSTER_MGMT_IP="$BASEIP.4"
 export CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
 export PASSWORD=${PASSWORD:-netapp123}
 API_ENDPOINT_HOST_PATH="$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
