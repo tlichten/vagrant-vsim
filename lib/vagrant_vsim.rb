@@ -10,7 +10,8 @@ BOX_NAME ||= "VSim"
 CDOT_VERSION ||= "8.2.3"
 VAGRANT_MINVERSION = '1.7.2'
 
-VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
+VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3RC1" => "1a12982e304752a44816be72ef98ba0d",
+                                  "8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
                                 }
 
 
