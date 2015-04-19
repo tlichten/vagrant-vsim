@@ -9,9 +9,8 @@ BASE_IMAGE ||= "vsim_netapp-cm.tgz"
 BOX_NAME ||= "VSim"
 CDOT_VERSION ||= "8.2.3"
 VAGRANT_MINVERSION = '1.7.2'
-VSIM_MD5_CHECKSUM = '1a12982e304752a44816be72ef98ba0b' # 8.3RC1 checksum
 
-VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "cDot-8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
+VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
                                 }
 
 
@@ -181,10 +180,10 @@ module VagrantPlugins
         actual_md5 = FileChecksum.new(BASE_IMAGE, Digest::MD5).checksum
         vsim_checksums = {}
         VSIM_BASE_IMAGE_MD5_CHECKSUMS.each do |k, v|
-          vsim_checksums[v] ||={}
+          vsim_checksums[v] ||= k
         end
-        checksum_found = vsim_checksums[actual_md5]
-        if !checksum_found
+        vsim_version_checksum_found = vsim_checksums[actual_md5]
+        if !vsim_version_checksum_found
           puts "\n"
           puts "ERROR: #{BOX_NAME} base image #{BASE_IMAGE} has unknown MD5 checksum #{actual_md5}, expected one of the following MD5 checksums:"
           VSIM_BASE_IMAGE_MD5_CHECKSUMS.each do |k, v|
@@ -195,13 +194,14 @@ module VagrantPlugins
           exit
         end
         puts "Done: Checksum is #{actual_md5}"
+        return vsim_version_checksum_found
       end
 
       def add_vsim(env)
         puts "Preparing to add #{BOX_NAME} to Vagrant. This may take a few minutes."
        
         check_base_image_exists
-        check_base_image_checksum_matches
+        vsim_version = check_base_image_checksum_matches
 
         tmp_dir = "tmp"
         if Dir.exist? tmp_dir
