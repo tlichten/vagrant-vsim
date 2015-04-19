@@ -1,2 +1,5 @@
 # Cluster status
 cluster show
+
+# List interfaces
+net interface show -fields vserver,curr-node,lif,role,curr-port,address,netmask
