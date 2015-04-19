@@ -11,8 +11,9 @@ CLUSTER_BASE_LICENSE=$CLUSTER_BASE_LICENSE
 export NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.155.3}
 export CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
 export PASSWORD=${PASSWORD:-netapp123}
-API_ENDPOINT="http://admin@$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
-
+API_ENDPOINT_HOST_PATH="$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
+API_ENDPOINT_INIT="http://admin@$API_ENDPOINT_HOST_PATH"
+API_ENDPOINT="http://admin:$PASSWORD@$API_ENDPOINT_HOST_PATH"
 sudo iptables -t nat -D PREROUTING -i eth1 -p tcp --dport 22222 -j REDIRECT --to-port 22 
 
 sudo sh -c 'echo "1" > /proc/sys/net/ipv4/ip_forward'
@@ -32,6 +33,17 @@ while [ $rc -ne 0 ]; do
   echo -n '.' 
 done
 echo "Pre-Cluster mode available"
+
+read -d '' ADMIN_PASSWORD << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+
+<netapp xmlns="http://www.netapp.com/filer/admin" version="1.20">
+  <security-login-modify-password>
+    <user-name>admin</user-name>
+    <new-password>$PASSWORD</new-password>
+  </security-login-modify-password>
+</netapp>
+EOF
 
 read -d '' CLUSTER_SETUP << EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -96,9 +108,12 @@ read -d '' ADD_LICENSES << EOF
 EOF
 
 sleep 5
+echo "Enabling password for setup on $NODE_MGMT_IP"
+/usr/bin/curl -X POST -d "$ADMIN_PASSWORD"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT_INIT
+sleep 5
 echo "Starting cluster setup on $NODE_MGMT_IP"
 /usr/bin/curl -X POST -d "$CLUSTER_SETUP"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 25
+sleep 60
 echo "Enabling SSH access for $CLUSTER_USERNAME"
 /usr/bin/curl -X POST -d "$SSH_ENABLE"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
 sleep 10
@@ -107,7 +122,7 @@ echo "Enabling SSH public key auth"
 sleep 5
 echo "Assigning disks"
 /usr/bin/curl -X POST -d "$DISK_ASSIGN" -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 15
+sleep 25
 
 if [ -n "$LICENSES" ]; then
   echo "Adding additional licenses $LICENSES"
