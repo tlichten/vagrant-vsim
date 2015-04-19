@@ -109,7 +109,13 @@ EOF
 
 sleep 5
 echo "Enabling password for setup on $NODE_MGMT_IP"
-/usr/bin/curl -X POST -d "$ADMIN_PASSWORD"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT_INIT
+ADMIN_PASSWORD_RESULT=$(/usr/bin/curl -X POST -d "$ADMIN_PASSWORD"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT_INIT)
+echo $ADMIN_PASSWORD_RESULT
+if [[ $ADMIN_PASSWORD_RESULT == *"13005"* ]]
+then
+  echo "security-login-modify-password API not supported, fallback to passwordless API calls";
+  API_ENDPOINT=$API_ENDPOINT_INIT
+fi
 sleep 5
 echo "Starting cluster setup on $NODE_MGMT_IP"
 /usr/bin/curl -X POST -d "$CLUSTER_SETUP"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
