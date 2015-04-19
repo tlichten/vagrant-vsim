@@ -1,5 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require "vagrant/util/file_checksum"
+
 configfile = 'vsim.conf'
 load configfile if File.exist?(configfile)
 
@@ -7,6 +9,11 @@ BASE_IMAGE ||= "vsim_netapp-cm.tgz"
 BOX_NAME ||= "VSim"
 CDOT_VERSION ||= "8.2.3"
 VAGRANT_MINVERSION = '1.7.2'
+VSIM_MD5_CHECKSUM = '1a12982e304752a44816be72ef98ba0b' # 8.3RC1 checksum
+
+VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "cDot-8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
+                                }
+
 
 Vagrant::Config.run do |config|
   if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new(VAGRANT_MINVERSION)
@@ -140,7 +147,7 @@ module VagrantPlugins
 
         if !box_found
           while true
-            puts "The vagrant #{BOX_NAME} box was not found."
+            puts "The Vagrant #{BOX_NAME} box was not found."
             puts "You must import it in order to proceed which may take a few minutes. Please do not quit Vagrant during this time. Would you like to import the Vagrant box? [y/n]: "
             case STDIN.getc
               when 'Y', 'y', 'yes'
@@ -153,27 +160,59 @@ module VagrantPlugins
         end
       end
 
-      def add_vsim(env)
-        if !File.exists?(BASE_IMAGE)
+      def print_download_instructions
+        puts "Download the Clustered-Ontap Simulator #{CDOT_VERSION} for VMware Workstation, VMware Player, and VMware Fusion from"
+        puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
+        puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
+      end
+
+      def check_base_image_exists
+        base_image_found = File.exists?(BASE_IMAGE)
+        if !base_image_found
           puts "\n\n"
           puts "#{BOX_NAME} base image #{BASE_IMAGE} not found."
-          puts "Download the Clustered-Ontap Simulator #{CDOT_VERSION} for VMware Workstation, VMware Player, and VMware Fusion from"
-          puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
-          puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
+          print_download_instructions
           exit
         end
+      end
 
-        if Dir.exist? "tmp"
-          FileUtils.rm_rf "tmp"
+      def check_base_image_checksum_matches
+        puts "Checking MD5 checksum for #{BASE_IMAGE}"
+        actual_md5 = FileChecksum.new(BASE_IMAGE, Digest::MD5).checksum
+        vsim_checksums = {}
+        VSIM_BASE_IMAGE_MD5_CHECKSUMS.each do |k, v|
+          vsim_checksums[v] ||={}
         end
-        puts "Preparing to add #{BOX_NAME} to vagrant. This may take a few minutes."
+        checksum_found = vsim_checksums[actual_md5]
+        if !checksum_found
+          puts "\n"
+          puts "ERROR: #{BOX_NAME} base image #{BASE_IMAGE} has unknown MD5 checksum #{actual_md5}, expected one of the following MD5 checksums:"
+          VSIM_BASE_IMAGE_MD5_CHECKSUMS.each do |k, v|
+            puts "#{k}: #{v}"
+          end
+          puts "This can be due to a corrupted download."
+          print_download_instructions
+          exit
+        end
+        puts "Done: Checksum is #{actual_md5}"
+      end
+
+      def add_vsim(env)
+        puts "Preparing to add #{BOX_NAME} to Vagrant. This may take a few minutes."
+       
+        check_base_image_exists
+        check_base_image_checksum_matches
+
         tmp_dir = "tmp"
+        if Dir.exist? tmp_dir
+          FileUtils.rm_rf tmp_dir
+        end
         FileUtils.mkdir tmp_dir 
         result = Vagrant::Util::Subprocess.execute("bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", BASE_IMAGE.to_s)
         vsim_dir = File.join(tmp_dir, "vsim_netapp-cm")
         template_dir = File.join(File.dirname(__FILE__) + "/../template", ".")
         FileUtils.cp_r template_dir, vsim_dir
-        puts "Packaging #{BOX_NAME} box for vagrant"
+        puts "Packaging #{BOX_NAME} box for Vagrant"
         Vagrant::Util::SafeChdir.safe_chdir(vsim_dir) do
           files = Dir.glob(File.join(".", "*"))
           result = Vagrant::Util::Subprocess.execute("bsdtar", "-c", "-v", "-z","-f", "#{BOX_NAME}.box", *files)
@@ -181,7 +220,7 @@ module VagrantPlugins
         box_file = File.join(vsim_dir, "#{BOX_NAME}.box")
         FileUtils.mv(box_file, tmp_dir)
         FileUtils.rm_rf vsim_dir
-        puts "Adding #{BOX_NAME} box to vagrant"
+        puts "Adding #{BOX_NAME} box to Vagrant"
         env[:action_runner].run(Vagrant::Action.action_box_add, {
           :box_name => BOX_NAME,
           :box_provider => "virtualbox",
@@ -190,7 +229,7 @@ module VagrantPlugins
           :box_download_insecure => true,
         })
         FileUtils.rm_rf tmp_dir
-        puts "Done: #{BOX_NAME} box added to vagrant."
+        puts "Done: #{BOX_NAME} box added to Vagrant."
       end
     end
 
