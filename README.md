@@ -46,7 +46,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
 ## Installation
 
  - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/vagrant-vsim/archive/master.zip) the project and extract it.
- - Download [*Clustered Data ONTAP 8.x Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/). cDOT Version 8.3RC1 and 8.2.3 have been tested.
+ - Download [*Clustered Data ONTAP 8.x Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/). Version 8.3RC1 and 8.2.3 have been tested.
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
  - Configure the Cluster base license.  
  Edit ```vsim.conf```, at the top set the 8.x Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
@@ -94,13 +94,14 @@ LICENSES="YVUXXXXXXXXXXXXXXXXXXXXXXXXX,SOHXXXXXXXXXXXXXXXXXXXXXXXXX,MBXXXXXXXXXX
 **Important**: Use the **non-ESX build** licenses. 
 
 ##### Networking  
-The simulator will automatically be configured with a node-mgmt lif. You can customize the IP address of that lif to match your Vagrant networking setup.  
-**Please note**: A dnsmasq process is used to offer the IP to the simulator. Please ensure you don't have a conflicting DHCP server on the same VBOXNet.  
+The simulator will automatically be configured with a node-mgmt lif as well as a cluster-mgmt lif. You can customize the IP address of that lif to match your Vagrant networking setup.  
+**Please note**: A dnsmasq process is used to offer the IP to the simulator. Please ensure you don't have a conflicting DHCP server on the same VBoxNet.  
 `vsim.conf`: 
 ```ruby
 ...
 # Host address for the VSim node auto mgmt lif which exposes ONTAPI
-# Note: An additional service vm will deployed w/ the host address of x.x.x.253
+# Note: A cluster mgmt lif will be created with the address x.x.x.4 and an
+# 	additional service vm will deployed w/ the host address of x.x.x.253
 NODE_MGMT_IP="10.0.207.3"
 ...
 ```
