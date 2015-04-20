@@ -1,6 +1,6 @@
 # VAGRANT-VSIM
 
-Use [Vagrant](https://www.vagrantup.com) to automatically create and configure an **experimental**, reproducible, and portable Clustered Data Ontap simulator environment  
+Use [Vagrant](https://www.vagrantup.com) to automatically create and configure an **experimental**, reproducible, and portable Clustered Data ONTAP simulator environment  
 
 ##### Credits
 This project makes use of the excellent instructions on [how to simulate Data ONTAP 8.1.1. with Virtualbox by BOBSHOUSEOFCARDS](http://community.netapp.com/t5/Simulator-Discussions/Simulate-ONTAP-8-1-1-withVirtualBox/m-p/2227#M89)
@@ -9,7 +9,7 @@ This project makes use of the excellent instructions on [how to simulate Data ON
 This project is **experimental** and uses [Virtualbox](https://www.virtualbox.org) which is a **non-supported** configuration for the simulator. There are smaller *hacks* for making this work and it is not pretty. Use at own risk. Please see known issues at the bottom.
 
 ##### Goal
-The goal of this project is to experimentally provide a largely automated, turn-key setup and configuration of a Clustered Data Ontap simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack. Experimental environments can automatically be created and configured, they are reproducible and portable.  
+The goal of this project is to experimentally provide a largely automated, turn-key setup and configuration of a Clustered Data ONTAP simulator using Vagrant in order to ease demos, speed up testing, and help become more familiar with cDot and its integration in projects like OpenStack. Experimental environments can automatically be created and configured, they are reproducible and portable.  
 
 ##### Table of Contents
 * [System requirements](#system-requirements)
@@ -22,7 +22,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
   * [Proxy and Caching](#proxy-and-caching)
   	* [Vagrant Proxyconf](#vagrant-proxyconf)
   	* [Vagrant Cachier](#vagrant-cachier)
-  * [Customize the Clustered Data Ontap environment](#customize-the-clustered-data-ontap-environment)
+  * [Customize the Clustered Data ONTAP environment](#customize-the-clustered-data-ontap-environment)
     * [CLI commands](#cli-commands)
     * [Chef](#chef)
     * [Ontapi](#ontapi)
@@ -41,20 +41,20 @@ The goal of this project is to experimentally provide a largely automated, turn-
 
  - [Virtualbox](https://www.virtualbox.org/wiki/Downloads) installed
  - [Vagrant](https://www.vagrantup.com/downloads.html) installed
- - Access to the NetApp support site to download the cDot simulator. Site access may be limited to customers and partners.
+ - Access to the NetApp support site to download the cDOT simulator. Site access may be limited to customers and partners.
 
 ## Installation
 
  - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/vagrant-vsim/archive/master.zip) the project and extract it.
- - Download [*Clustered Data Ontap 8.2.3 Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/)
+ - Download [*Clustered Data ONTAP 8.x Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/). cDOT Version 8.3RC1 and 8.2.3 have been tested.
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
  - Configure the Cluster base license.  
- Edit ```vsim.conf```, at the top set the 8.2.3 Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
+ Edit ```vsim.conf```, at the top set the 8.x Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  
 `vsim.conf`: 
 ```bash
 ...
 # Specify the Cluster Base License
-# Important: Use the Cluster Base license for Clustered-Ontap Simulator 8.2.3 for
+# Important: Use the Cluster Base license for Clustered-ONTAP Simulator 8.x for
 # VMware Workstation, VMware Player, and VMware Fusion
 CLUSTER_BASE_LICENSE="SMKXXXXXXXXXXXXXXXXXXXXXXXXX"
 ...
@@ -68,6 +68,7 @@ CLUSTER_BASE_LICENSE="SMKXXXXXXXXXXXXXXXXXXXXXXXXX"
 $ vagrant up
 ```
  - You will be asked to import the simulator as a Vagrant box on first run. Press ```y``` to proceed and import. The import will take a few minutes.
+ - During the deployment, a service VM will be started. The service VM will offer an ip address to the simulator and configure the VSim.
  - Wait until the VSim is ready. Once ready, to access the VSim console run:
 ```bash
 $ vagrant ssh vsim
@@ -120,7 +121,7 @@ To speed up the deployment and avoid unnecessary downloads, install  [Vagrant Ca
 vagrant plugin install vagrant-cachier
 ```
 
-##### Customize the Clustered Data Ontap environment 
+##### Customize the Clustered Data ONTAP environment 
 
 CLI commands and Chef can be used to customize the environment.
 
@@ -128,9 +129,6 @@ CLI commands and Chef can be used to customize the environment.
 You can customize any additional commands that will automatically be executed line-by-line once the simulator is running and the cluster is set up.  
 `vsim.cmds`:
 ```bash
-# Assigning all disks to node
-disk assign -all true -node VSIM-01
-
 # Cluster status
 cluster show
 
@@ -169,10 +167,9 @@ $ vagrant box remove ubuntu/trusty64
 
 ## Known issues
 
- - There is **no error handling** in place, please do not just abort the program when things take a while. At first start, please be patient, preparing the VSim Vagrant box can take several minutes.
+ - There is almost **no error handling** in place, please do not just abort the program when things take a while. At first start, please be patient, preparing the VSim Vagrant box can take several minutes.
  - Occassionaly, ```vagrant destroy``` will error and can not delete all VM disks. These stale VMs may consume significant disk space. Manual deletion is required. Delete those VMs from your Virtualbox directory, e.g. `~\VirtualBox VMs`
  - The setup is currently limited to a single node cluster
- - Clustered Data Ontap 8.2.3 - no support for 8.3
  - Setup on Windows doesn't work reliably
 
 ```license

@@ -7,7 +7,7 @@ load configfile if File.exist?(configfile)
 
 BASE_IMAGE ||= "vsim_netapp-cm.tgz"
 BOX_NAME ||= "VSim"
-CDOT_VERSION ||= "8.2.3"
+CDOT_VERSION ||= "8.x"
 VAGRANT_MINVERSION = '1.7.2'
 
 VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3RC1" => "1a12982e304752a44816be72ef98ba0d",
