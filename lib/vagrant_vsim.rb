@@ -14,7 +14,6 @@ VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3RC1" => "1a12982e304752a44816be72ef98ba0d"
                                   "8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
                                 }
 
-
 Vagrant::Config.run do |config|
   if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new(VAGRANT_MINVERSION)
       puts "Vagrant version #{Gem::Version.new(Vagrant::VERSION)} detected. But Vagrant version #{Gem::Version.new(VAGRANT_MINVERSION)} or greater is required. Please update Vagrant."
@@ -177,7 +176,7 @@ module VagrantPlugins
       end
 
       def check_base_image_checksum_matches
-        puts "Checking MD5 checksum for #{BASE_IMAGE}"
+        puts "Calculating MD5 checksum for #{BASE_IMAGE}"
         actual_md5 = FileChecksum.new(BASE_IMAGE, Digest::MD5).checksum
         vsim_checksums = {}
         VSIM_BASE_IMAGE_MD5_CHECKSUMS.each do |k, v|
@@ -194,7 +193,7 @@ module VagrantPlugins
           print_download_instructions
           exit
         end
-        puts "Done: Checksum is #{actual_md5}"
+        puts "Done: Checksum is #{actual_md5}, matching VSim version #{vsim_version_checksum_found}"
         return vsim_version_checksum_found
       end
 
@@ -203,7 +202,7 @@ module VagrantPlugins
        
         check_base_image_exists
         vsim_version = check_base_image_checksum_matches
-
+        puts "Extracting #{BASE_IMAGE} to temp directory"
         tmp_dir = "tmp"
         if Dir.exist? tmp_dir
           FileUtils.rm_rf tmp_dir
