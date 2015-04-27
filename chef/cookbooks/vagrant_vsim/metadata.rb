@@ -1,4 +1,4 @@
-name             'vsim'
+name             'vagrant_vsim'
 maintainer       'tlichten'
 maintainer_email 'tlichten@netapp.com'
 license          'All rights reserved'
