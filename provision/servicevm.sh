@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 . /vagrant/vsim.conf
+sudo rm /var/lib/apt/lists/* -vf
 sudo apt-get -y update
 sudo apt-get -y install dnsmasq sshpass git
 BASEIP=`echo $NODE_MGMT_IP | cut -d"." -f1-3`
