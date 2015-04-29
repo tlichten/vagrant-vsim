@@ -2,6 +2,7 @@
 
 # update system
 export DEBIAN_FRONTEND noninteractive
+sudo rm /var/lib/apt/lists/* -vf
 sudo apt-get update
 sudo apt-get install -qqy git
 
