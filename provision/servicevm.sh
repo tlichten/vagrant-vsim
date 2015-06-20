@@ -7,11 +7,14 @@ BASEIP=`echo $NODE_MGMT_IP | cut -d"." -f1-3`
 sudo sh -c "cat <<EOF >> /etc/dnsmasq.conf
 dhcp-range=$BASEIP.60,$BASEIP.62,12h
 dhcp-host=08:00:DE:AD:AC:1D,vsim,$NODE_MGMT_IP,infinite
+dhcp-host=08:00:DE:AD:FA:CE,vsim2,$BASEIP.13,infinite
 log-dhcp
 EOF"
 sudo /etc/init.d/dnsmasq restart
 
 sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22222 -j REDIRECT --to-port 22
+
+sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22223 -j REDIRECT --to-port 22
 
 echo "Preparing Chef"
 sudo su $OS_USER -c "cp -R /vagrant/chef /home/vagrant/"

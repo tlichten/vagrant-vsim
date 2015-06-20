@@ -17,7 +17,7 @@ if [ ! -d "$VAGRANT_VSIM" ]
 then
 	echo "Download vagrant-vsim into $VAGRANT_VSIM"
 	# clone vagrant-vsim
-	su $OS_USER -c "cd && git clone https://github.com/tlichten/vagrant-vsim.git $VAGRANT_VSIM"
+	su $OS_USER -c "cd && git clone -b second_node https://github.com/tlichten/vagrant-vsim.git $VAGRANT_VSIM"
 fi
 
 # start vagrant-vsim provisioning

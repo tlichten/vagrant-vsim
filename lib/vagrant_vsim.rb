@@ -29,7 +29,7 @@ module VagrantPlugins
       end
 
       def call(env)
-        if env[:provision_enabled] && env[:machine].name.to_s == BOX_NAME.downcase
+        if env[:provision_enabled] && ( env[:machine].name.to_s == BOX_NAME.downcase || env[:machine].name.to_s == BOX_NAME.downcase + '2' )
           env[:ui].info("Provisioning #{BOX_NAME}")
 
           # Wait 10 seconds for machine to come up
@@ -75,10 +75,41 @@ module VagrantPlugins
 
           #  send "=4a<Enter>"
           customizations << ["controlvm", :id, "keyboardputscancode", "0d", "8d", "05", "85", "1e", "9e", "1c", "9c"]
+          if env[:machine].name.to_s == BOX_NAME.downcase + "2"
+            #  send "setenv "
+            customizations << ["controlvm", :id, "keyboardputscancode", "1f", "9f", "12", "92", "14", "94", "12", "92", "31", "b1", "2f", "af", "39", "b9"]
 
+            #  send "SYS_"
+            customizations << ["controlvm", :id, "keyboardputscancode", "2a", "1f", "9f", "aa", "2a", "15", "95", "aa", "2a", "1f", "9f", "aa", "2a", "0c", "8c", "aa"]     
+
+            #  send "SERIAL_"
+            customizations << ["controlvm", :id, "keyboardputscancode", "2a", "1f", "9f", "aa", "2a", "12", "92", "aa", "2a", "13", "93", "aa", "2a", "17", "97", "aa", "2a", "1e", "9e", "aa", "2a", "26", "a6", "aa", "2a", "0c", "8c", "aa"]
+
+            #  send "NUM "
+            customizations << ["controlvm", :id, "keyboardputscancode", "2a", "31", "b1", "aa", "2a", "16", "96", "aa", "2a", "32", "b2", "aa", "39", "b9"]
+
+            #  send "4034389-06-2<Enter>"
+            customizations << ["controlvm", :id, "keyboardputscancode", "05", "85", "0b", "8b", "04", "84", "05", "85", "04", "84", "09", "89", "0a", "8a", "0c", "8c", "0b", "8b", "07", "87", "0c", "8c", "03", "83", "1c", "9c"]       
+
+            #  send "setenv "
+            customizations << ["controlvm", :id, "keyboardputscancode", "1f", "9f", "12", "92", "14", "94", "12", "92", "31", "b1", "2f", "af", "39", "b9"]
+
+            #  send "bootarg"
+            customizations << ["controlvm", :id, "keyboardputscancode", "30", "b0", "18", "98", "18", "98", "14", "94", "1e", "9e", "13", "93", "22", "a2"]
+         
+            #  send ".nvram"
+            customizations << ["controlvm", :id, "keyboardputscancode", "34", "b4", "31", "b1", "2f", "af", "13", "93", "1e", "9e", "32", "b2"]
+
+            #  send ".sysid "
+            customizations << ["controlvm", :id, "keyboardputscancode", "34", "b4", "1f", "9f", "15", "95", "1f", "9f", "17", "97", "20", "a0", "39", "b9"]
+
+            #  send "4034389062<Enter>"
+            customizations << ["controlvm", :id, "keyboardputscancode", "05", "85", "0b", "8b", "04", "84", "05", "85", "04", "84", "09", "89", "0a", "8a", "0b", "8b", "07", "87", "03", "83", "1c", "9c"]
+          end             
+    
           #  send "boot<Enter>"
           customizations << ["controlvm", :id, "keyboardputscancode","30","b0","18","98","18","98","14","94","1c","9c"]
-
+ 
           if !customizations.empty?
             env[:ui].info("Sending #{BOX_NAME} boot flags")
             # Execute each customization command.
