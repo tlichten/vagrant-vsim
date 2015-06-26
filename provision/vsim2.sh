@@ -12,6 +12,7 @@ export NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.207.3}
 BASEIP=`echo $NODE_MGMT_IP | cut -d"." -f1-3`
 export NODE_MGMT_IP="$BASEIP.13"
 export CLUSTER_MGMT_IP="$BASEIP.14"
+export CLUSTER_IP="10.0.208.100"
 export CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
 export PASSWORD=${PASSWORD:-netapp123}
 API_ENDPOINT_HOST_PATH="$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
@@ -48,14 +49,29 @@ read -d '' ADMIN_PASSWORD << EOF
 </netapp>
 EOF
 
-read -d '' CLUSTER_SETUP << EOF
+read -d '' CLUSTER_LIF_CREATE << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 
-<netapp xmlns="http://www.netapp.com/filer/admin" version="1.21">
-  <cluster-create>
-    <license>$CLUSTER_BASE_LICENSE</license>
-    <cluster-name>VSIM</cluster-name>
-  </cluster-create>
+<netapp xmlns="http://www.netapp.com/filer/admin" version="1.20">
+  <net-interface-create>
+    <vserver>localhost</vserver>
+    <interface-name>cluster2</interface-name>
+    <role>cluster</role>
+    <home-node>localhost</home-node>
+    <home-port>e0b</home-port>
+    <address>10.0.208.200</address>
+    <netmask>255.255.255.0</netmask>
+  </net-interface-create>
+</netapp>
+EOF
+
+read -d '' CLUSTER_JOIN << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+
+<netapp xmlns="http://www.netapp.com/filer/admin" version="1.20">
+  <cluster-join>
+    <cluster-ip-address>$CLUSTER_IP</cluster-ip-address>
+  </cluster-join>
 </netapp>
 EOF
 
@@ -120,6 +136,12 @@ then
   API_ENDPOINT=$API_ENDPOINT_INIT
 fi
 sleep 5
+echo "Creating cluster lif"
+/usr/bin/curl -X POST -d "$CLUSTER_LIF_CREATE"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
+sleep 20
+echo "Joining cluster"
+/usr/bin/curl -X POST -d "$CLUSTER_JOIN"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
+sleep 20
 
 
 echo "SSH is available at $NODE_MGMT_IP. username $CLUSTER_USERNAME, password $PASSWORD"
