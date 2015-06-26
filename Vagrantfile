@@ -64,7 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     vsim.vm.provision :shell, :path => File.dirname(__FILE__) + "/provision/vagrant.sh", :args => "vsim"
     vsim.vm.provider "virtualbox" do |v|
-     v.gui = true
+    # v.gui = true
     end
   end
 
@@ -90,7 +90,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     vsim.vm.provision :shell, :path => File.dirname(__FILE__) + "/provision/vagrant.sh", :args => "vsim2"
     vsim.vm.provider "virtualbox" do |v|
-      v.gui = true
+    #  v.gui = true
     end
   end
 end
