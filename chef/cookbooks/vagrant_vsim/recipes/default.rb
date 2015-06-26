@@ -16,3 +16,13 @@ netapp_lif 'cluster_mgmt' do
   netmask '255.255.255.0'
   action :create
 end
+
+netapp_lif 'cluster1' do
+  svm 'VSIM-01'
+  role 'cluster'
+  home_node 'VSIM-01'
+  home_port 'e0b'
+  address '10.208.208.3'
+  netmask '255.255.255.0'
+  action :create
+end

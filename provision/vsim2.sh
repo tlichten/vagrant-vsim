@@ -12,7 +12,7 @@ export NODE_MGMT_IP=${NODE_MGMT_IP:-10.0.207.3}
 BASEIP=`echo $NODE_MGMT_IP | cut -d"." -f1-3`
 export NODE_MGMT_IP="$BASEIP.13"
 export CLUSTER_MGMT_IP="$BASEIP.14"
-export CLUSTER_IP="10.0.208.100"
+export CLUSTER_IP="10.208.208.3"
 export CLUSTER_USERNAME=${CLUSTER_USERNAME:-vagrant}
 export PASSWORD=${PASSWORD:-netapp123}
 API_ENDPOINT_HOST_PATH="$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
@@ -59,7 +59,7 @@ read -d '' CLUSTER_LIF_CREATE << EOF
     <role>cluster</role>
     <home-node>localhost</home-node>
     <home-port>e0b</home-port>
-    <address>10.0.208.200</address>
+    <address>10.208.208.13</address>
     <netmask>255.255.255.0</netmask>
   </net-interface-create>
 </netapp>
