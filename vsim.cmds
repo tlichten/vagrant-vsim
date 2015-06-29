@@ -1,6 +1,8 @@
 # Cluster status
 cluster show
 
+network interface create -vserver VSIM-01 -lif cluster1 -role cluster -home-node VSIM-01 -home-port e0b -address 10.208.208.3 -netmask 255.255.255.0 -status-admin up 
+
 # List interfaces
 net interface show -fields vserver,curr-node,lif,role,curr-port,address,netmask
 
