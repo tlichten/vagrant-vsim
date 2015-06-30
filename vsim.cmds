@@ -1,7 +1,13 @@
 # Cluster status
 cluster show
 
-network interface create -vserver VSIM-01 -lif cluster1 -role cluster -home-node VSIM-01 -home-port e0b -address 10.208.208.3 -netmask 255.255.255.0 -status-admin up 
+network port broadcast-domain modify -broadcast-domain Cluster -mtu 1500
+
+network port broadcast-domain remove-ports -broadcast-domain Default -ports VSIM-01:e0b -ipspace Default
+
+network port broadcast-domain add-ports -broadcast-domain Cluster -ports VSIM-01:e0b -ipspace Cluster 
+
+network interface create -vserver Cluster -lif cluster1 -role cluster -home-node VSIM-01 -home-port e0b -address 10.208.208.3 -netmask 255.255.255.0 -status-admin up
 
 # List interfaces
 net interface show -fields vserver,curr-node,lif,role,curr-port,address,netmask

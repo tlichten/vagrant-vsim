@@ -54,7 +54,7 @@ read -d '' CLUSTER_LIF_CREATE << EOF
 
 <netapp xmlns="http://www.netapp.com/filer/admin" version="1.20">
   <net-interface-create>
-    <vserver>localhost</vserver>
+    <vserver>Cluster</vserver>
     <interface-name>cluster2</interface-name>
     <role>cluster</role>
     <home-node>localhost</home-node>
