@@ -1,7 +1,7 @@
 # Cluster status
 cluster show
 
-network port broadcast-domain modify -broadcast-domain Cluster -mtu 1500
+network port broadcast-domain modify -broadcast-domain Cluster -ipspace Cluster -mtu 1500
 
 network port broadcast-domain remove-ports -broadcast-domain Default -ports VSIM-01:e0b -ipspace Default
 
