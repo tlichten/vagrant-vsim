@@ -121,7 +121,7 @@ fi
 sleep 5
 echo "Starting cluster setup on $NODE_MGMT_IP"
 /usr/bin/curl -X POST -d "$CLUSTER_SETUP"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
-sleep 60
+sleep 90
 echo "Enabling SSH access for $CLUSTER_USERNAME"
 /usr/bin/curl -X POST -d "$SSH_ENABLE"  -sS --noproxy $NODE_MGMT_IP $API_ENDPOINT
 sleep 10
