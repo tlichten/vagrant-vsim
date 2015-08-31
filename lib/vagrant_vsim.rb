@@ -164,7 +164,7 @@ module VagrantPlugins
       def print_sdk_download_instructions
         puts "Download the NetApp Manageability (NM) SDK from"
         puts "https://mysupport.netapp.com/NOW/download/software/nmsdk/5.4/"
-        puts "Save the dowloaded archive file,e.g. #{NETAPP_SDK}, in this directory and run 'vagrant up' again."
+        puts "Save the dowloaded archive file, e.g. #{NETAPP_SDK}, in this directory and run 'vagrant up' again."
       end
       
       def check_netapp_sdk_exists
