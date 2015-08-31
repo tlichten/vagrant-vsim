@@ -5,14 +5,14 @@ require "vagrant/util/file_checksum"
 configfile = 'vsim.conf'
 load configfile if File.exist?(configfile)
 
-BASE_IMAGE ||= "vsim_netapp-cm.tgz"
+BASE_IMAGE ||= "vsim-netapp-DOT8.3-cm.ova"
 NETAPP_SDK ||= "netapp-manageability-sdk*.zip"
-BOX_NAME ||= "VSim"
-CDOT_VERSION ||= "8.x"
-VAGRANT_MINVERSION = '1.7.2'
+VSIM_NAME ||="vsim"
+CDOT_VERSION ||= "8.3"
+BOX_NAME ||= "#{VSIM_NAME}-#{CDOT_VERSION}"
+VAGRANT_MINVERSION = '1.7.4'
 
-VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3RC1" => "1a12982e304752a44816be72ef98ba0d",
-                                  "8.2.3" => "5829ec72650e84ab9e9cc79a9d37ab6e" 
+VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3" => "00b6c5bf471829e4241052705bf4c602" 
                                 }
 
 Vagrant::Config.run do |config|
@@ -30,7 +30,7 @@ module VagrantPlugins
       end
 
       def call(env)
-        if env[:provision_enabled] && env[:machine].name.to_s == BOX_NAME.downcase
+        if env[:provision_enabled] && env[:machine].name.to_s == VSIM_NAME
           env[:ui].info("Provisioning #{BOX_NAME}")
 
           # Wait 10 seconds for machine to come up
@@ -227,7 +227,7 @@ module VagrantPlugins
         end
         FileUtils.mkdir tmp_dir 
         result = Vagrant::Util::Subprocess.execute("bsdtar", "-v", "-x", "-m", "-C", tmp_dir.to_s, "-f", BASE_IMAGE.to_s)
-        vsim_dir = File.join(tmp_dir, "vsim_netapp-cm")
+        vsim_dir = File.join(tmp_dir, ".")
         template_dir = File.join(File.dirname(__FILE__) + "/../template", ".")
         FileUtils.cp_r template_dir, vsim_dir
         puts "Packaging #{BOX_NAME} box for Vagrant"
@@ -236,8 +236,6 @@ module VagrantPlugins
           result = Vagrant::Util::Subprocess.execute("bsdtar", "-c", "-v", "-z","-f", "#{BOX_NAME}.box", *files)
         end 
         box_file = File.join(vsim_dir, "#{BOX_NAME}.box")
-        FileUtils.mv(box_file, tmp_dir)
-        FileUtils.rm_rf vsim_dir
         puts "Adding #{BOX_NAME} box to Vagrant"
         env[:action_runner].run(Vagrant::Action.action_box_add, {
           :box_name => BOX_NAME,

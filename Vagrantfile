@@ -42,8 +42,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "vsim" do |vsim|
-    vsim.vm.box = "VSim"
+  config.vm.define VSIM_NAME do |vsim|
+    vsim.vm.box = BOX_NAME
     vsim.ssh.host = SERVICEVM_HOST_IP
     vsim.ssh.insert_key = false
     vsim.ssh.forward_agent = true
@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vsim.vm.boot_timeout = 800
     vsim.vm.synced_folder '.', '/vagrant', disabled: true
     vsim.vm.provider "virtualbox" do |v|
-      v.memory = 1600
+      v.memory = 5120
     end
     # NODE_MGMT_IP is used below to ensure the nics will be on the same VBOXNET as the servicevm.
     # The nic ips are not configured by vagrant as the auto_config param is set to false, instead a dnsmasq 

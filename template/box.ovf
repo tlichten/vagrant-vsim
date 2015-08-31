@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <Envelope ovf:version="1.0" xml:lang="en-US" xmlns="http://schemas.dmtf.org/ovf/envelope/1" xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1" xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData" xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vbox="http://www.virtualbox.org/ovf/machine">
   <References>
-    <File ovf:href="DataONTAP.vmdk" ovf:id="file1"/>
-    <File ovf:href="DataONTAP-var.vmdk" ovf:id="file2"/>
-    <File ovf:href="DataONTAP-nvram.vmdk" ovf:id="file3"/>
-    <File ovf:href="DataONTAP-sim.vmdk" ovf:id="file4"/>
+    <File ovf:compression="gzip" ovf:href="vsim-netapp-DOT8.3-cm-disk1.vmdk.gz" ovf:id="file1" ovf:size="500930044"/>
+    <File ovf:compression="gzip" ovf:href="vsim-netapp-DOT8.3-cm-disk2.vmdk.gz" ovf:id="file2" ovf:size="605"/>
+    <File ovf:compression="gzip" ovf:href="vsim-netapp-DOT8.3-cm-disk3.vmdk.gz" ovf:id="file3" ovf:size="611"/>
+    <File ovf:compression="gzip" ovf:href="vsim-netapp-DOT8.3-cm-disk4.vmdk.gz" ovf:id="file4" ovf:size="626"/>
   </References>
   <DiskSection>
     <Info>List of the virtual disks used in the package</Info>
