@@ -168,7 +168,7 @@ module VagrantPlugins
       end
       
       def check_netapp_sdk_exists
-        sdk_found = Dir.glob(NETAPP_SDK).empty?
+        sdk_found = !Dir.glob(NETAPP_SDK).empty?
         if !sdk_found
           puts "\n\n"
           puts "NetApp Manageability SDK not found."
