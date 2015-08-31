@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 . /vagrant/vsim.conf
-sudo rm -Rf /var/lib/apt/lists/* -vf
 sudo apt-get -y update
-sudo apt-get -y install dnsmasq sshpass git
+sudo apt-get -y install dnsmasq sshpass git unzip
 BASEIP=`echo $NODE_MGMT_IP | cut -d"." -f1-3`
 sudo sh -c "cat <<EOF >> /etc/dnsmasq.conf
 dhcp-range=$BASEIP.60,$BASEIP.62,12h
@@ -17,7 +16,6 @@ echo "Preparing Chef"
 sudo su $OS_USER -c "cp -R /vagrant/chef /home/vagrant/"
 sudo su $OS_USER -c "cd /home/vagrant/chef/cookbooks && git clone https://github.com/chef-partners/netapp-cookbook.git netapp"
 
-sudo su $OS_USER -c "cd && git clone https://github.com/antani/nmsdk_ruby.git"
-
-sudo su $OS_USER -c "cp -R /home/vagrant/nmsdk_ruby/lib/rb/* /home/vagrant/chef/cookbooks/netapp/libraries"
+sudo su $OS_USER -c "cd && unzip /vagrant/netapp-manageability-sdk*.zip && cp netapp-manageability-sdk*/lib/ruby/NetApp/* /home/vagrant/chef/cookbooks/netapp/libraries && rm -Rf netapp-manageability-sdk*"
+sudo su $OS_USER -c "sed -i \"s/require 'NaElement/require File.dirname(__FILE__) + '\/NaElement/g\" /home/vagrant/chef/cookbooks/netapp/libraries/NaServer.rb"
 chown $OS_USER:$OS_USER /home/vagrant/chef/cookbooks/netapp/libraries/*

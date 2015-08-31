@@ -6,6 +6,7 @@ configfile = 'vsim.conf'
 load configfile if File.exist?(configfile)
 
 BASE_IMAGE ||= "vsim_netapp-cm.tgz"
+NETAPP_SDK ||= "netapp-manageability-sdk*.zip"
 BOX_NAME ||= "VSim"
 CDOT_VERSION ||= "8.x"
 VAGRANT_MINVERSION = '1.7.2'
@@ -133,6 +134,7 @@ module VagrantPlugins
           puts "Edit vsim.conf, at the top set CLUSTER_BASE_LICENSE accordingly."
           exit
         end
+        check_netapp_sdk_exists
         ask_to_add_vsim_unless_exists(env)
         @app.call(env)
       end
@@ -159,12 +161,28 @@ module VagrantPlugins
         end
       end
 
+      def print_sdk_download_instructions
+        puts "Download the NetApp Manageability (NM) SDK from"
+        puts "https://mysupport.netapp.com/NOW/download/software/nmsdk/5.4/"
+        puts "Save the dowloaded archive file,e.g. #{NETAPP_SDK}, in this directory and run 'vagrant up' again."
+      end
+      
+      def check_netapp_sdk_exists
+        sdk_found = Dir.glob(NETAPP_SDK).empty?
+        if !sdk_found
+          puts "\n\n"
+          puts "NetApp Manageability SDK not found."
+          print_sdk_download_instructions
+          exit
+        end
+      end
+
       def print_download_instructions
         puts "Download the Clustered-Ontap Simulator #{CDOT_VERSION} for VMware Workstation, VMware Player, and VMware Fusion from"
         puts "http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/"
         puts "Save the dowloaded base image file #{BASE_IMAGE} in this directory and run 'vagrant up' again."
       end
-
+      
       def check_base_image_exists
         base_image_found = File.exists?(BASE_IMAGE)
         if !base_image_found
