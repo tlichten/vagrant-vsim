@@ -48,7 +48,7 @@ The goal of this project is to experimentally provide a largely automated, turn-
  - If you use [Git](http://git-scm.com/), clone this repo. If you don't use Git, [download](https://github.com/tlichten/vagrant-vsim/archive/master.zip) the project and extract it.
  - Download [*NetApp Manageability (NM) SDK*](https://mysupport.netapp.com/NOW/download/software/nmsdk/5.4/). Version 5.4 has been tested.
  - Save the downloaded file ```netapp-manageability-sdk*.zip``` to this project's root directory, e.g. ```~/vagrant-vsim/netapp-manageability-sdk-5.4.zip```
- - Download [*Clustered Data ONTAP 8.x Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/). Version 8.3RC1 and 8.2.3 has been tested.
+ - Download [*Clustered Data ONTAP 8.x Simulator for VMware Workstation, VMware Player, and VMware Fusion*](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/). Version 8.2.3 has been tested.
  - Save the downloaded file ```vsim_netapp-cm.tgz``` to this project's root directory, e.g. ```~/vagrant-vsim/vsim_netapp-cm.tgz```
  - Configure the Cluster base license.  
  Edit ```vsim.conf```, at the top set the 8.x Cluster base license within ```CLUSTER_BASE_LICENSE``` accordingly. The license can be obtained from the [support site](http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/).  

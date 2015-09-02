@@ -29,7 +29,7 @@ sudo iptables-save > /dev/null
 echo "Awaiting Pre-Cluster mode. This can take a few minutes ..."
 rc=1; 
 while [ $rc -ne 0 ]; do 
-  /usr/bin/wget --no-proxy $NODE_MGMT_IP/na_admin > /dev/null 2>&1
+  /usr/bin/wget -O /dev/null -o /dev/null --no-proxy $NODE_MGMT_IP/na_admin  > /dev/null 2>&1
   rc=$?
   sleep 1  
   echo -n '.' 
