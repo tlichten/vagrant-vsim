@@ -148,6 +148,10 @@ sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no $CLUSTER_USERNAME@$NODE_MGM
 echo "Running chef recipes"
 cd /home/vagrant/chef && chef-solo -c solo.rb -j web.json
 
+echo "Running Puppet"
+sudo timeout 10s puppet device --verbose --user=root
+sudo puppet cert sign --all --allow-dns-alt-names
+#sudo puppet device --verbose --user=root
 
 echo "Running additional commands"
 while read -u 3 p; do

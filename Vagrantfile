@@ -28,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "servicevm" do |servicevm|
     servicevm.vm.box = "ubuntu/trusty64"
-    servicevm.vm.hostname = "servicevm"
+    servicevm.vm.hostname = "puppet"
     servicevm.ssh.insert_key = false
     servicevm.vm.provider "virtualbox" do |v|
       v.memory = 512
