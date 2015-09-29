@@ -16,11 +16,11 @@ export PASSWORD=${PASSWORD:-netapp123}
 API_ENDPOINT_HOST_PATH="$NODE_MGMT_IP/servlets/netapp.servlets.admin.XMLrequest_filer"
 API_ENDPOINT_INIT="http://admin@$API_ENDPOINT_HOST_PATH"
 API_ENDPOINT="http://admin:$PASSWORD@$API_ENDPOINT_HOST_PATH"
-sudo iptables -t nat -D PREROUTING -i eth1 -p tcp --dport 22222 -j REDIRECT --to-port 22 
+sudo iptables -t nat -D PREROUTING -i eth2 -p tcp --dport 22222 -j REDIRECT --to-port 22 
 
 sudo sh -c 'echo "1" > /proc/sys/net/ipv4/ip_forward'
 
-sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22222 -j DNAT --to-destination $NODE_MGMT_IP:22
+sudo iptables -t nat -A PREROUTING -i eth2 -p tcp --dport 22222 -j DNAT --to-destination $NODE_MGMT_IP:22
 
 sudo iptables -t nat -A POSTROUTING -j MASQUERADE
 

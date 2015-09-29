@@ -34,7 +34,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.memory = 512
       v.cpus = 1
     end
-    servicevm.vm.network "private_network", ip: SERVICEVM_HOST_IP
+	# Adding a dummy network since there is an unwanted default DHCP server on initial vboxnet0
+	# https://github.com/mitchellh/vagrant/issues/3083	
+	servicevm.vm.network "private_network", ip: "192.168.56.56"    
+	servicevm.vm.network "private_network", ip: SERVICEVM_HOST_IP
     servicevm.vm.provision :shell, :path => File.dirname(__FILE__) + "/provision/vagrant.sh", :args => "servicevm"
 
     if Vagrant.has_plugin?("vagrant-cachier")

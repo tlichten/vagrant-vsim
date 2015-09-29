@@ -14,13 +14,13 @@ log-dhcp
 EOF"
 sudo /etc/init.d/dnsmasq restart
 
-sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22222 -j REDIRECT --to-port 22
+sudo iptables -t nat -A PREROUTING -i eth2 -p tcp --dport 22222 -j REDIRECT --to-port 22
 
 echo "Preparing Chef"
 sudo su $OS_USER -c "cp -R /vagrant/chef /home/vagrant/"
 sudo su $OS_USER -c "cd /home/vagrant/chef/cookbooks && git clone https://github.com/chef-partners/netapp-cookbook.git netapp"
 
-sudo su $OS_USER -c "cd && unzip /vagrant/netapp-manageability-sdk*.zip && cp netapp-manageability-sdk*/lib/ruby/NetApp/* /home/vagrant/chef/cookbooks/netapp/libraries && rm -Rf netapp-manageability-sdk*"
+sudo su $OS_USER -c "cd && unzip -q /vagrant/netapp-manageability-sdk*.zip && cp netapp-manageability-sdk*/lib/ruby/NetApp/* /home/vagrant/chef/cookbooks/netapp/libraries && rm -Rf netapp-manageability-sdk*"
 sudo su $OS_USER -c "sed -i \"s/require 'NaElement/require File.dirname(__FILE__) + '\/NaElement/g\" /home/vagrant/chef/cookbooks/netapp/libraries/NaServer.rb"
 chown $OS_USER:$OS_USER /home/vagrant/chef/cookbooks/netapp/libraries/*
 
@@ -28,7 +28,7 @@ echo "Preparing Puppet"
 sudo cp -R /vagrant/puppet/device.conf /etc/puppet/device.conf
 sudo cp -R /vagrant/puppet/site.pp /etc/puppet/manifests/site.pp
 sudo git clone https://github.com/puppetlabs/puppetlabs-netapp.git /etc/puppet/modules/netapp
-sudo su $OS_USER -c "cd && unzip /vagrant/netapp-manageability-sdk*.zip && sudo cp netapp-manageability-sdk*/lib/ruby/NetApp/*.rb /etc/puppet/modules/netapp/lib/puppet/netapp_sdk/ && rm -Rf netapp-manageability-sdk*"
+sudo su $OS_USER -c "cd && unzip -q /vagrant/netapp-manageability-sdk*.zip && sudo cp netapp-manageability-sdk*/lib/ruby/NetApp/*.rb /etc/puppet/modules/netapp/lib/puppet/netapp_sdk/ && rm -Rf netapp-manageability-sdk*"
 sudo su -c "echo '127.0.1.1 puppet.example.com puppet' >> /etc/hosts"
 sudo su -c "echo '127.0.1.1 servicevm.example.com servicevm' >> /etc/hosts"
 sudo su -c "echo '10.0.207.3 vsim-01.example.com vsim-01' >> /etc/hosts"
