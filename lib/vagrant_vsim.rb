@@ -5,14 +5,14 @@ require "vagrant/util/file_checksum"
 configfile = 'vsim.conf'
 load configfile if File.exist?(configfile)
 
-BASE_IMAGE ||= "vsim-netapp-DOT8.3-cm.ova"
+BASE_IMAGE ||= "vsim-netapp-DOT8.3.2-cm.ova"
 NETAPP_SDK ||= "netapp-manageability-sdk*.zip"
 VSIM_NAME ||="vsim"
-CDOT_VERSION ||= "8.3"
+CDOT_VERSION ||= "8.3.2"
 BOX_NAME ||= "#{VSIM_NAME}-#{CDOT_VERSION}"
 VAGRANT_MINVERSION = '1.7.4'
 
-VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3" => "00b6c5bf471829e4241052705bf4c602" 
+VSIM_BASE_IMAGE_MD5_CHECKSUMS = { "8.3.2" => "86852313a2e739312693243e3387a03f" 
                                 }
 
 Vagrant::Config.run do |config|
